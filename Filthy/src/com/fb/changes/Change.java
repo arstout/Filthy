@@ -6,11 +6,5 @@ public abstract class Change {
 
 	public Change() {
 	}
-	
-	
-	
-	
-	
-	
-	
+
 }

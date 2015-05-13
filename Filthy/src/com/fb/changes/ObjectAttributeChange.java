@@ -1,16 +1,13 @@
 package com.fb.changes;
 
-
 import com.fb.GameObject;
 
-
-public class ObjectAttributeChange extends Change{
-
+public class ObjectAttributeChange extends Change {
 
 	private String objectId;
 	private String attribute;
 	private String value;
-	
+
 	public ObjectAttributeChange(String objectId, String attribute, String value) {
 		super();
 		this.type = "ATTRIBUTE";
@@ -43,21 +40,20 @@ public class ObjectAttributeChange extends Change{
 		this.value = value;
 	}
 
-	public static void modifyAttributeOnObject(GameObject object, String attributeName, String attributeValue)
-	{
-		
+	public static void modifyAttributeOnObject(GameObject object,
+			String attributeName, String attributeValue) {
+
 		try {
-			
+
 			object.addAttribute(attributeName, attributeValue);
 
-//			Class<?> c = o.getClass();
-//			Field f = c.getDeclaredField(attributeName);
-//			f.setAccessible(true);
-//			f.set(o,attributeValue);
-			
-		} catch (Exception e) {}
+			// Class<?> c = o.getClass();
+			// Field f = c.getDeclaredField(attributeName);
+			// f.setAccessible(true);
+			// f.set(o,attributeValue);
+
+		} catch (Exception e) {
+		}
 	}
-	
-	
-	
+
 }

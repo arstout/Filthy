@@ -17,90 +17,112 @@ import com.fb.occupations.behavior.requirements.Requirement;
 
 public class DecisionNode {
 
+	/* Name of the Decision Node */
 	private String name;
+
+	/* Array list of the requirements */
 	private List<Requirement> requirements = new ArrayList<Requirement>();
+
+	/* Steps that will be processed if Node returns true */
 	private Queue<DecisionStep> passedDecisionSteps = new PriorityQueue<DecisionStep>();
+
+	/* Steps that will be processed if Node returns false */
 	private Queue<DecisionStep> failedDecisionSteps = new PriorityQueue<DecisionStep>();
-	private Map<String,Action> actions = new HashMap<String,Action>();
-	
-	
+
+	/* Map of actions to take for this Node */
+	private Map<String, Action> actions = new HashMap<String, Action>();
+
 	public DecisionNode(String name) {
 		super();
 		this.name = name;
 	}
-	
-	
 
-	public Map<String,GameObject> checkRequirements(){ 
-		
-		
+	public Map<String, GameObject> checkRequirements() {
+
 		// check requirements
-				Iterator<Requirement> requirementsIter = this.requirements.iterator();
-				
-				System.out.println("There are <" + this.requirements.size() + "> requirements for this decision.");
+		Iterator<Requirement> requirementsIter = this.requirements.iterator();
 
-				Map<String,GameObject> requiredObjects = new HashMap<String,GameObject>();
-				while(requirementsIter.hasNext()) {
-					Requirement currentRequirement = requirementsIter.next();
-					if(currentRequirement instanceof ObjectExistenceRequirement) {
-						System.out.println("checking for existence of an object...");
-						String type = ((ObjectExistenceRequirement)currentRequirement).getType();
-						Map<String,String> attributeChecks = ((ObjectExistenceRequirement)currentRequirement).getAttributeChecks();
-						
-						GameObject requiredObject = Main.gameObjects.findGameObjectByType(type);
-						if( requiredObject == null) {
-							//object not found!
+		System.out.println("There are <" + this.requirements.size()
+				+ "> requirements for this decision.");
+
+		Map<String, GameObject> requiredObjects = new HashMap<String, GameObject>();
+		while (requirementsIter.hasNext()) {
+			Requirement currentRequirement = requirementsIter.next();
+
+			// Check to see if an object exists and verify attributes on this
+			// object.
+			// TODO: Verify this with additional scope (personal, communal,
+			// global)
+			if (currentRequirement instanceof ObjectExistenceRequirement) {
+				System.out.println("checking for existence of an object...");
+				String type = ((ObjectExistenceRequirement) currentRequirement)
+						.getType();
+				Map<String, String> attributeChecks = ((ObjectExistenceRequirement) currentRequirement)
+						.getAttributeChecks();
+
+				GameObject requiredObject = Main.gameObjects
+						.findGameObjectByType(type);
+
+				if (requiredObject == null) {
+					// object not found!
+					return null;
+
+				} else {
+					Set<String> keys = attributeChecks.keySet();
+					Iterator<String> iter = keys.iterator();
+					while (iter.hasNext()) {
+						String key = iter.next();
+						String value = attributeChecks.get(key);
+						if (!requiredObject.getAttribute(key).equals(value)) {
+							System.out.println("value for attribute <" + key
+									+ "> not valid.  was <"
+									+ requiredObject.getAttribute(key)
+									+ ">, expected <" + value + ">.");
 							return null;
-						} else {
-							Set<String> keys = attributeChecks.keySet();
-							Iterator<String> iter = keys.iterator();
-							while(iter.hasNext()){
-								String key = iter.next();
-								String value = attributeChecks.get(key);
-								if(!requiredObject.getAttribute(key).equals(value)){
-									System.out.println("value for attribute <" + key + "> not valid.  was <" + requiredObject.getAttribute(key) + ">, expected <" + value + ">.");
-									return null;
-								}
-							}
-							System.out.println("object found!");
-							requiredObjects.put(((ObjectExistenceRequirement) currentRequirement).getObjectId(),requiredObject);
 						}
 					}
-					
-					
+					System.out.println("object found!");
+					requiredObjects.put(
+							((ObjectExistenceRequirement) currentRequirement)
+									.getObjectId(), requiredObject);
 				}
-				return requiredObjects;
-			
-				
+
+			}
+
+		}
+
+		return requiredObjects;
+
 	}
-	public void addFailedDecisionStep(DecisionStep decisionStep){
+
+	public void addFailedDecisionStep(DecisionStep decisionStep) {
 		this.failedDecisionSteps.add(decisionStep);
 	}
-	
-	public Queue<DecisionStep> getFailedDecisionSteps(){
+
+	public Queue<DecisionStep> getFailedDecisionSteps() {
 		return this.failedDecisionSteps;
 	}
-	
-	public void addPassedDecisionStep(DecisionStep decisionStep){
+
+	public void addPassedDecisionStep(DecisionStep decisionStep) {
 		this.passedDecisionSteps.add(decisionStep);
 	}
-	
-	public Queue<DecisionStep> getPassedDecisionSteps(){
+
+	public Queue<DecisionStep> getPassedDecisionSteps() {
 		return this.passedDecisionSteps;
 	}
-	
+
 	public void addAction(Action action) {
 		this.actions.put(action.getName(), action);
 	}
-	
+
 	public Action getAction(String name) {
 		return actions.get(name);
 	}
-	
+
 	public void addRequirement(Requirement requirement) {
 		this.requirements.add(requirement);
-		
 	}
+
 	public String getName() {
 		return name;
 	}
@@ -116,7 +138,5 @@ public class DecisionNode {
 	public void setRequirements(List<Requirement> requirements) {
 		this.requirements = requirements;
 	}
-	
-	
-	
+
 }
