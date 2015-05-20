@@ -7,17 +7,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.fb.GameObject;
 import com.fb.Main;
-import com.fb.Person;
 import com.fb.changes.ObjectAttributeChange;
 import com.fb.changes.Change;
+import com.fb.gameobject.GameObject;
 
 public class Action {
 
 	private String name;
 	private int duration;
-	private Person executor;
 	private Map<String, GameObject> gameObjects = new HashMap<String, GameObject>();
 	private int startTurn;
 	private int finishTurn;
@@ -31,10 +29,9 @@ public class Action {
 		this.duration = duration;
 	}
 
-	public Action(Action action, Person executor) {
+	public Action(Action action) {
 		this.name = action.name;
 		this.duration = action.duration;
-		this.executor = executor;
 		this.postActionChanges = action.postActionChanges;
 	}
 
@@ -86,14 +83,6 @@ public class Action {
 
 	public void setDuration(int duration) {
 		this.duration = duration;
-	}
-
-	public Person getExecutor() {
-		return executor;
-	}
-
-	public void setExecutor(Person executor) {
-		this.executor = executor;
 	}
 
 	public int getStartTurn() {

@@ -4,9 +4,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Queue;
 
-import com.fb.GameObject;
-import com.fb.Person;
 import com.fb.actions.Action;
+import com.fb.gameobject.GameObject;
+import com.fb.object.person.Person;
 
 public class BehaviorTreeTraverser {
 
@@ -25,7 +25,7 @@ public class BehaviorTreeTraverser {
 				+ decisionNode.getName() + ">.");
 
 		Map<String, GameObject> requiredObjects = decisionNode
-				.checkRequirements();
+				.checkRequirements(person);
 
 		if (requiredObjects == null) {
 			// FALSE PATH
@@ -45,10 +45,10 @@ public class BehaviorTreeTraverser {
 							+ this.person.getName() + ">.");
 					Action action = decisionNode.getAction(currentDecisionStep
 							.getName());
-					Action actionCopy = new Action(action, this.person);
+					Action actionCopy = new Action(action);
 					actionCopy.addGameObjects(requiredObjects);
 					this.person
-							.addActionToQueue(new Action(action, this.person));
+							.addActionToQueue(new Action(action));
 					break;
 				case "DECISION":
 					DecisionNode nextNode = behaviorTree
@@ -76,7 +76,7 @@ public class BehaviorTreeTraverser {
 							+ this.person.getName() + ">.");
 					Action action = decisionNode.getAction(currentDecisionStep
 							.getName());
-					Action actionCopy = new Action(action, this.person);
+					Action actionCopy = new Action(action);
 					actionCopy.addGameObjects(requiredObjects);
 					this.person.addActionToQueue(actionCopy);
 					break;

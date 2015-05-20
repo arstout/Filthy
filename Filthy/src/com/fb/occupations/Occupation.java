@@ -7,9 +7,8 @@ public class Occupation {
 	private String name;
 	private BehaviorTree behaviorTree;
 
-	public Occupation(String name, BehaviorTree behaviorTree) {
+	public Occupation(String name) {
 		this.name = name;
-		this.behaviorTree = behaviorTree;
 	}
 
 	public String getName() {

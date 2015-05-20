@@ -1,6 +1,6 @@
 package com.fb.changes;
 
-import com.fb.GameObject;
+import com.fb.gameobject.GameObject;
 
 public class ObjectAttributeChange extends Change {
 
@@ -10,7 +10,6 @@ public class ObjectAttributeChange extends Change {
 
 	public ObjectAttributeChange(String objectId, String attribute, String value) {
 		super();
-		this.type = "ATTRIBUTE";
 		this.objectId = objectId;
 		this.attribute = attribute;
 		this.value = value;

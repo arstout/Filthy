@@ -5,15 +5,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
-import com.fb.GameObject;
-import com.fb.Main;
 import com.fb.actions.Action;
+import com.fb.gameobject.Attribute;
+import com.fb.gameobject.GameObject;
+import com.fb.gameobject.GameObjectStore;
+import com.fb.object.person.Person;
 import com.fb.occupations.behavior.requirements.ObjectExistenceRequirement;
 import com.fb.occupations.behavior.requirements.Requirement;
+import com.fb.occupations.behavior.requirements.SkillCheckRequirement;
 
 public class DecisionNode {
 
@@ -37,7 +41,7 @@ public class DecisionNode {
 		this.name = name;
 	}
 
-	public Map<String, GameObject> checkRequirements() {
+	public Map<String, GameObject> checkRequirements(Person person) {
 
 		// check requirements
 		Iterator<Requirement> requirementsIter = this.requirements.iterator();
@@ -57,37 +61,44 @@ public class DecisionNode {
 				System.out.println("checking for existence of an object...");
 				String type = ((ObjectExistenceRequirement) currentRequirement)
 						.getType();
-				Map<String, String> attributeChecks = ((ObjectExistenceRequirement) currentRequirement)
-						.getAttributeChecks();
+				Map<String, Attribute> attributes = ((ObjectExistenceRequirement) currentRequirement)
+						.getAttributes();
 
-				GameObject requiredObject = Main.gameObjects
-						.findGameObjectByType(type);
+				GameObject requiredObject = GameObjectStore
+						.findGameObject(type, attributes, person);
 
 				if (requiredObject == null) {
 					// object not found!
 					return null;
 
-				} else {
-					Set<String> keys = attributeChecks.keySet();
-					Iterator<String> iter = keys.iterator();
-					while (iter.hasNext()) {
-						String key = iter.next();
-						String value = attributeChecks.get(key);
-						if (!requiredObject.getAttribute(key).equals(value)) {
-							System.out.println("value for attribute <" + key
-									+ "> not valid.  was <"
-									+ requiredObject.getAttribute(key)
-									+ ">, expected <" + value + ">.");
-							return null;
-						}
-					}
-					System.out.println("object found!");
-					requiredObjects.put(
-							((ObjectExistenceRequirement) currentRequirement)
-									.getObjectId(), requiredObject);
-				}
+				} 
+
+				requiredObjects.put("worksite", requiredObject);
 
 			}
+			else if(currentRequirement instanceof SkillCheckRequirement){
+				System.out.println("checking skills...");
+				
+			
+				// iterate through skills, make sure values are good
+				Map<String,Integer> requiredSkills = ((SkillCheckRequirement) currentRequirement).getSkills();
+				Set<Entry<String, Integer>> setSkills = requiredSkills.entrySet();
+				Iterator<Entry<String, Integer>> iter = setSkills.iterator();
+				while(iter.hasNext()) {
+					Entry<String,Integer> skill = iter.next();
+					String skillName = skill.getKey();
+					Integer skillValue = skill.getValue();
+					Integer personSkillValue = person.getSkillValue(skillName);
+					if(personSkillValue.intValue() < skillValue.intValue()) {
+						//FAIL
+						System.out.println("required skill <" + skillName + "> too low.  Expected <" 
+								+ skillValue.intValue() + ">, got <" + personSkillValue.intValue() + ">");
+						return null;
+					}
+				}
+				
+			}
+
 
 		}
 
