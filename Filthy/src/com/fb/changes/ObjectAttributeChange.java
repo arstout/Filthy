@@ -46,11 +46,6 @@ public class ObjectAttributeChange extends Change {
 
 			object.addAttribute(attributeName, attributeValue);
 
-			// Class<?> c = o.getClass();
-			// Field f = c.getDeclaredField(attributeName);
-			// f.setAccessible(true);
-			// f.set(o,attributeValue);
-
 		} catch (Exception e) {
 		}
 	}

@@ -1,70 +1,27 @@
 package com.fb.actions;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.fb.Main;
-import com.fb.changes.ObjectAttributeChange;
 import com.fb.changes.Change;
 import com.fb.gameobject.GameObject;
+import com.fb.gameobject.Person;
 
-public class Action {
+public abstract class Action {
 
-	private String name;
-	private int duration;
-	private Map<String, GameObject> gameObjects = new HashMap<String, GameObject>();
-	private int startTurn;
-	private int finishTurn;
-	private int pausedTurn;
-	private String state = "QUEUED";
-	private List<Change> postActionChanges = new ArrayList<Change>();
+	protected String name;
+	protected Map<String, GameObject> gameObjects = new HashMap<String, GameObject>();
+	protected String state = "QUEUED";
+	protected List<Change> changes = new ArrayList<Change>();
 
-	public Action(String name, int duration) {
-		super();
-		this.name = name;
-		this.duration = duration;
-	}
 
-	public Action(Action action) {
-		this.name = action.name;
-		this.duration = action.duration;
-		this.postActionChanges = action.postActionChanges;
-	}
+	public abstract void start(Person person);
+	public abstract void complete(Person person);
 
-	public void start() {
-		this.startTurn = Main.turn;
-		this.finishTurn = this.startTurn + this.duration;
-		this.state = "ACTIVE";
-
-	}
-
-	public void complete() {
-
-		// execute post-action changes
-		System.out.println("completing action <" + this.getName() + ">");
-		System.out.println("there are <" + postActionChanges.size()
-				+ "> changes to make.");
-		Iterator<Change> changeIter = postActionChanges.iterator();
-		while (changeIter.hasNext()) {
-			Change change = changeIter.next();
-			if (change instanceof ObjectAttributeChange) {
-				GameObject objectToChange = gameObjects
-						.get(((ObjectAttributeChange) change).getObjectId());
-				String attribute = ((ObjectAttributeChange) change)
-						.getAttribute();
-				String value = ((ObjectAttributeChange) change).getValue();
-				System.out.println("Changing object " + objectToChange);
-				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
-						attribute, value);
-			}
-		}
-
-	}
-
+	public abstract void turn(Person person);
+	
 	public void addGameObjects(Map<String, GameObject> gameObjects) {
 		this.gameObjects = gameObjects;
 	}
@@ -77,44 +34,8 @@ public class Action {
 		this.name = name;
 	}
 
-	public int getDuration() {
-		return duration;
-	}
-
-	public void setDuration(int duration) {
-		this.duration = duration;
-	}
-
-	public int getStartTurn() {
-		return startTurn;
-	}
-
-	public void setStartTurn(int startTurn) {
-		this.startTurn = startTurn;
-	}
-
-	public int getFinishTurn() {
-		return finishTurn;
-	}
-
-	public void setFinishTurn(int finishTurn) {
-		this.finishTurn = finishTurn;
-	}
-
-	public int getPausedTurn() {
-		return pausedTurn;
-	}
-
-	public void setPausedTurn(int pausedTurn) {
-		this.pausedTurn = pausedTurn;
-	}
-
 	public String getState() {
 
-		// before returning state, let's see if it needs moved to complete.
-		if (Main.turn == this.finishTurn) {
-			this.state = "COMPLETED";
-		}
 		return state;
 	}
 
@@ -122,50 +43,17 @@ public class Action {
 		this.state = state;
 	}
 
-	public List<Change> getPostActionChanges() {
-		return postActionChanges;
+	public List<Change> getChanges() {
+		return changes;
 	}
 
-	public void setPostActionChanges(List<Change> postActionChanges) {
-		this.postActionChanges = postActionChanges;
+	public void setChanges(List<Change> changes) {
+		this.changes = changes;
 	}
 
-	public void addPostActionChange(Change change) {
-		this.postActionChanges.add(change);
+	public void addChange(Change change) {
+		this.changes.add(change);
 	}
 
-	public void onDone() {
-		// execute changes
-	}
 
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("Action <" + this.name + "> is " + this.state).append(
-				System.getProperty("line.separator"));
-		switch (this.state) {
-		case "QUEUED":
-			sb.append("This action is QUEUED.").append(
-					System.getProperty("line.separator"));
-			break;
-		case "ACTIVE":
-			sb.append(
-					"This action is ACTIVE.  Number of turns remaining is <"
-							+ (this.finishTurn - Main.turn) + ">").append(
-					System.getProperty("line.separator"));
-			break;
-		case "COMPLETED":
-			sb.append("This action is COMPLETED").append(
-					System.getProperty("line.separator"));
-			break;
-		}
-
-		Collection<GameObject> gameObjects = this.gameObjects.values();
-		Iterator<GameObject> objectIter = gameObjects.iterator();
-		while (objectIter.hasNext()) {
-			GameObject gameObject = objectIter.next();
-			sb.append("Attached object: " + gameObject + ".").append(
-					System.getProperty("line.separator"));
-		}
-		return sb.toString();
-	}
 }

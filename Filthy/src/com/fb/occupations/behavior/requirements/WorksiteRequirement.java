@@ -5,12 +5,12 @@ import java.util.Map;
 
 import com.fb.gameobject.Attribute;
 
-public class ObjectExistenceRequirement extends Requirement {
+public class WorksiteRequirement extends Requirement {
 
 	private String type;
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 
-	public ObjectExistenceRequirement(String type) {
+	public WorksiteRequirement(String type) {
 		this.type = type;
 	}
 

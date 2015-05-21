@@ -14,8 +14,9 @@ import com.fb.actions.Action;
 import com.fb.gameobject.Attribute;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.GameObjectStore;
-import com.fb.object.person.Person;
-import com.fb.occupations.behavior.requirements.ObjectExistenceRequirement;
+import com.fb.gameobject.Person;
+import com.fb.gameobject.Worksite;
+import com.fb.occupations.behavior.requirements.WorksiteRequirement;
 import com.fb.occupations.behavior.requirements.Requirement;
 import com.fb.occupations.behavior.requirements.SkillCheckRequirement;
 
@@ -46,8 +47,6 @@ public class DecisionNode {
 		// check requirements
 		Iterator<Requirement> requirementsIter = this.requirements.iterator();
 
-		System.out.println("There are <" + this.requirements.size()
-				+ "> requirements for this decision.");
 
 		Map<String, GameObject> requiredObjects = new HashMap<String, GameObject>();
 		while (requirementsIter.hasNext()) {
@@ -57,28 +56,26 @@ public class DecisionNode {
 			// object.
 			// TODO: Verify this with additional scope (personal, communal,
 			// global)
-			if (currentRequirement instanceof ObjectExistenceRequirement) {
-				System.out.println("checking for existence of an object...");
-				String type = ((ObjectExistenceRequirement) currentRequirement)
-						.getType();
-				Map<String, Attribute> attributes = ((ObjectExistenceRequirement) currentRequirement)
+			if (currentRequirement instanceof WorksiteRequirement) {
+			
+				Map<String, Attribute> attributes = ((WorksiteRequirement) currentRequirement)
 						.getAttributes();
 
-				GameObject requiredObject = GameObjectStore
-						.findGameObject(type, attributes, person);
+				Worksite worksite = GameObjectStore
+						.findWorksite(attributes, person);
 
-				if (requiredObject == null) {
+				if (worksite == null) {
 					// object not found!
+					System.out.println("A suitable worksite was not found.");
 					return null;
 
 				} 
 
-				requiredObjects.put("worksite", requiredObject);
+				System.out.println("A suitable worksite was successfully found.");
+				requiredObjects.put("worksite", worksite);
 
 			}
-			else if(currentRequirement instanceof SkillCheckRequirement){
-				System.out.println("checking skills...");
-				
+			else if(currentRequirement instanceof SkillCheckRequirement){				
 			
 				// iterate through skills, make sure values are good
 				Map<String,Integer> requiredSkills = ((SkillCheckRequirement) currentRequirement).getSkills();
@@ -94,6 +91,8 @@ public class DecisionNode {
 						System.out.println("required skill <" + skillName + "> too low.  Expected <" 
 								+ skillValue.intValue() + ">, got <" + personSkillValue.intValue() + ">");
 						return null;
+					} else {
+						System.out.println("required skill <" + skillName + "> is sufficient.");
 					}
 				}
 				

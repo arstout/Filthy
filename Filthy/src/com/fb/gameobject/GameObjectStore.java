@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.fb.object.person.Person;
-
 public class GameObjectStore {
 
 	// object store implemented as in-memory map of lists (map key = type)
@@ -109,5 +107,62 @@ public class GameObjectStore {
 	
 	
 	}
+	
+	
+	public static Worksite findWorksite(Map<String,Attribute> attributes, Person owner){
+
+		Set<GameObject> subSet = getSubStore("worksite");
+
+		// if subSet is null, an object of this type doesn't exist, therefore the object doesn't exist.
+		if(subSet == null){
+			return null;
+		}
+		
+		if(subSet.size() == 0){ 
+			return null;
+		}
+		
+		// we need to be a bit specific here.  Don't allow no attributes
+		if(attributes == null){
+			return null;
+		}
+		
+		if(attributes.size() == 0){
+			return null;
+		}
+		
+		// ok, there are objects.  Let's filter further
+		for(GameObject gameObject : subSet){
+			
+			boolean failedAttrCheck = false;
+			// check each attribute
+			for(String attributeName : attributes.keySet()){
+				
+				String attr1 = attributes.get(attributeName).getValue();
+				String attr2 = gameObject.getAttribute(attributeName).getValue();
+				
+				if(!attr1.equals(attr2)){
+					// this attribute does not match.
+					failedAttrCheck = true;
+					break;
+				}
+			}
+			
+			// check if we matched on all attributes
+			if(!failedAttrCheck && (gameObject.getOwner().equals(owner) || gameObject.getOwner().equals(owner.getEmployer())) && ((Worksite)gameObject).hasAvailableWorkerRoom()){
+				//winner winner
+				return (Worksite)gameObject;
+			} 
+						
+		}
+		
+		// If we're here, then no objects matched.
+		return null;
+		
+	
+	
+	}
+	
+	
 
 }

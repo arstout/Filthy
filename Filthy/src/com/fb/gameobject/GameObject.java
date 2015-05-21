@@ -2,23 +2,17 @@ package com.fb.gameobject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
-
-import com.fb.object.person.Person;
 
 public class GameObject {
 
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 	
-	private Set<String> types = new HashSet<String>();
-	private String name;
-	private List<Person> workers = new ArrayList<Person>();
-	private int maxWorkers;
+	private String name = "";
 	private Person owner;
+	private List<GameObject> inventory = new ArrayList<GameObject>();
 
 	public GameObject(String name) {
 		this.name = name;
@@ -41,6 +35,16 @@ public class GameObject {
 	}
 	
 	
+	public List<GameObject> getInventory(){
+		return this.inventory;
+	}
+	
+	public void addToInventory(GameObject gameObject){
+		this.inventory.add(gameObject);
+	}
+	
+
+
 	public Person getOwner() {
 		return owner;
 	}
@@ -49,24 +53,6 @@ public class GameObject {
 		this.owner = owner;
 	}
 
-	public void addWorker(Person worker){
-		if(this.workers.size() < this.maxWorkers){
-			this.workers.add(worker);
-		}
-		
-	}
-	
-	public void removeWorker(Person worker){ 
-		this.workers.remove(worker);
-	}
-	
-	public int getMaxWorkers() {
-		return maxWorkers;
-	}
-
-	public void setMaxWorkers(int maxWorkers) {
-		this.maxWorkers = maxWorkers;
-	}
 
 	public String getName() {
 		return name;

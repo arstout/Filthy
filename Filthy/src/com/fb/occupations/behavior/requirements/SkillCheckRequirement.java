@@ -3,7 +3,7 @@ package com.fb.occupations.behavior.requirements;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fb.object.person.Person;
+import com.fb.gameobject.Person;
 
 public class SkillCheckRequirement extends Requirement {
 
