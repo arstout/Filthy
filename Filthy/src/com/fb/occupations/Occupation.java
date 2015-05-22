@@ -12,7 +12,7 @@ public class Occupation {
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -20,7 +20,7 @@ public class Occupation {
 	}
 
 	public BehaviorTree getBehaviorTree() {
-		return behaviorTree;
+		return this.behaviorTree;
 	}
 
 	public void setBehaviorTree(BehaviorTree behaviorTree) {

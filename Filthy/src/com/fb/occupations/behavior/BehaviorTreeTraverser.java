@@ -24,33 +24,31 @@ public class BehaviorTreeTraverser {
 	public void traverseNode(DecisionNode decisionNode) {
 
 		System.out.println(person.getName()
-				+ " is attempting to execute decision "
-				+ decisionNode.getName() + ".");
+		        + " is attempting to execute decision "
+		        + decisionNode.getName() + ".");
 
 		Map<String, GameObject> requiredObjects = decisionNode
-				.checkRequirements(person);
+		        .checkRequirements(person);
 
 		if (requiredObjects == null) {
 			// FALSE PATH
 			System.out.println("Decision <" + decisionNode.getName()
-					+ "> has failed pre-requisites for <" + person.getName()
-					+ ">.");
+			        + "> has failed pre-requisites for <" + person.getName()
+			        + ">.");
 			Queue<DecisionStep> failedDesicionSteps = decisionNode
-					.getFailedDecisionSteps();
+			        .getFailedDecisionSteps();
 			Iterator<DecisionStep> decisionStepIter = failedDesicionSteps
-					.iterator();
+			        .iterator();
 			while (decisionStepIter.hasNext()) {
 				DecisionStep currentDecisionStep = decisionStepIter.next();
 				switch (currentDecisionStep.getType()) {
 				case "ACTION":
-
-					handleActionStep(decisionNode, currentDecisionStep, requiredObjects);
-					
-					
+					handleActionStep(decisionNode, currentDecisionStep,
+					        requiredObjects);
 					break;
 				case "DECISION":
 					DecisionNode nextNode = behaviorTree
-							.getDecisionNode(currentDecisionStep.getName());
+					        .getDecisionNode(currentDecisionStep.getName());
 					traverseNode(nextNode);
 					break;
 				}
@@ -59,22 +57,22 @@ public class BehaviorTreeTraverser {
 		} else {
 			// TRUE PATH
 			System.out.println("Decision <" + decisionNode.getName()
-					+ "> has passed pre-requisites for <" + person.getName()
-					+ ">.");
+			        + "> has passed pre-requisites for <" + person.getName()
+			        + ">.");
 			Queue<DecisionStep> passedDesicionSteps = decisionNode
-					.getPassedDecisionSteps();
+			        .getPassedDecisionSteps();
 			Iterator<DecisionStep> decisionStepIter = passedDesicionSteps
-					.iterator();
+			        .iterator();
 			while (decisionStepIter.hasNext()) {
 				DecisionStep currentDecisionStep = decisionStepIter.next();
 				switch (currentDecisionStep.getType()) {
 				case "ACTION":
-					handleActionStep(decisionNode, currentDecisionStep, requiredObjects);
-					
+					handleActionStep(decisionNode, currentDecisionStep,
+					        requiredObjects);
 					break;
 				case "DECISION":
 					DecisionNode nextNode = behaviorTree
-							.getDecisionNode(currentDecisionStep.getName());
+					        .getDecisionNode(currentDecisionStep.getName());
 					traverseNode(nextNode);
 					break;
 				}
@@ -82,36 +80,34 @@ public class BehaviorTreeTraverser {
 		}
 
 	}
-	
-	private void handleActionStep(DecisionNode decisionNode, DecisionStep currentDecisionStep, Map<String, GameObject> requiredObjects){
-		System.out.println("adding action <"
-				+ currentDecisionStep.getName() + "> to queue of <"
-				+ this.person.getName() + ">.");
-		Action action = decisionNode.getAction(currentDecisionStep
-				.getName());
-		if(action instanceof WorkAction){
-			WorkAction workAction = new WorkAction((WorkAction)action);
-			
-			Worksite worksite = (Worksite)(requiredObjects.get("worksite"));
 
-			//add person to workers
+	private void handleActionStep(DecisionNode decisionNode,
+	        DecisionStep currentDecisionStep,
+	        Map<String, GameObject> requiredObjects) {
+		System.out.println("adding action <" + currentDecisionStep.getName()
+		        + "> to queue of <" + this.person.getName() + ">.");
+		Action action = decisionNode.getAction(currentDecisionStep.getName());
+		if (action instanceof WorkAction) {
+			WorkAction workAction = new WorkAction((WorkAction) action);
+
+			Worksite worksite = (Worksite) (requiredObjects.get("worksite"));
+
+			// add person to workers
 			worksite.addWorker(person);
-			
+
 			// set turns on worksite only if it is not in use
-			if(!worksite.isInUse()){
+			if (!worksite.isInUse()) {
 				worksite.setTurnsUntilWorkComplete(workAction.getName());
 			}
-			
+
 			// adjust person work output
 			person.setWorkOutputPerTurn(1);
-			
+
 			// set worksite
 			workAction.setWorksite(worksite);
-			
-			
-			
+
 			this.person.addActionToQueue(workAction);
-		} else if(action instanceof SimpleAction){
+		} else if (action instanceof SimpleAction) {
 			this.person.addActionToQueue(action);
 		}
 	}
@@ -128,9 +124,9 @@ public class BehaviorTreeTraverser {
 				currentAction.start(person);
 				break;
 			case "ACTIVE":
-				if(currentAction instanceof WorkAction){
+				if (currentAction instanceof WorkAction) {
 					currentAction.turn(person);
-				} else if(currentAction instanceof SimpleAction){
+				} else if (currentAction instanceof SimpleAction) {
 					currentAction.turn(person);
 				}
 				break;
@@ -143,10 +139,7 @@ public class BehaviorTreeTraverser {
 			// go to parent node
 			traverseNode(behaviorTree.getParentNode());
 		}
-		
 
 	}
-	
-
 
 }

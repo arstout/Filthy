@@ -40,13 +40,12 @@ public class ObjectAttributeChange extends Change {
 	}
 
 	public static void modifyAttributeOnObject(GameObject object,
-			String attributeName, String attributeValue) {
+	        String attributeName, String attributeValue) {
 
 		try {
-
 			object.addAttribute(attributeName, attributeValue);
-
 		} catch (Exception e) {
+			// Do nothing
 		}
 	}
 

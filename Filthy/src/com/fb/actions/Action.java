@@ -16,12 +16,12 @@ public abstract class Action {
 	protected String state = "QUEUED";
 	protected List<Change> changes = new ArrayList<Change>();
 
-
 	public abstract void start(Person person);
+
 	public abstract void complete(Person person);
 
 	public abstract void turn(Person person);
-	
+
 	public void addGameObjects(Map<String, GameObject> gameObjects) {
 		this.gameObjects = gameObjects;
 	}
@@ -35,7 +35,6 @@ public abstract class Action {
 	}
 
 	public String getState() {
-
 		return state;
 	}
 
@@ -54,6 +53,5 @@ public abstract class Action {
 	public void addChange(Change change) {
 		this.changes.add(change);
 	}
-
 
 }

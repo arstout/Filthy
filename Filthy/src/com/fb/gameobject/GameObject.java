@@ -9,7 +9,7 @@ import java.util.UUID;
 public class GameObject {
 
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
-	
+
 	private String name = "";
 	private Person owner;
 	private List<GameObject> inventory = new ArrayList<GameObject>();
@@ -29,21 +29,16 @@ public class GameObject {
 	}
 
 	public void addAttribute(String name, String value) {
-
-		this.attributes.put(name, new Attribute(name,value));
-
+		this.attributes.put(name, new Attribute(name, value));
 	}
-	
-	
-	public List<GameObject> getInventory(){
+
+	public List<GameObject> getInventory() {
 		return this.inventory;
 	}
-	
-	public void addToInventory(GameObject gameObject){
+
+	public void addToInventory(GameObject gameObject) {
 		this.inventory.add(gameObject);
 	}
-	
-
 
 	public Person getOwner() {
 		return owner;
@@ -53,7 +48,6 @@ public class GameObject {
 		this.owner = owner;
 	}
 
-
 	public String getName() {
 		return name;
 	}
@@ -62,5 +56,4 @@ public class GameObject {
 		this.name = name;
 	}
 
-	
 }

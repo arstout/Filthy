@@ -47,7 +47,6 @@ public class DecisionNode {
 		// check requirements
 		Iterator<Requirement> requirementsIter = this.requirements.iterator();
 
-
 		Map<String, GameObject> requiredObjects = new HashMap<String, GameObject>();
 		while (requirementsIter.hasNext()) {
 			Requirement currentRequirement = requirementsIter.next();
@@ -57,47 +56,52 @@ public class DecisionNode {
 			// TODO: Verify this with additional scope (personal, communal,
 			// global)
 			if (currentRequirement instanceof WorksiteRequirement) {
-			
-				Map<String, Attribute> attributes = ((WorksiteRequirement) currentRequirement)
-						.getAttributes();
 
-				Worksite worksite = GameObjectStore
-						.findWorksite(attributes, person);
+				Map<String, Attribute> attributes = ((WorksiteRequirement) currentRequirement)
+				        .getAttributes();
+
+				Worksite worksite = GameObjectStore.findWorksite(attributes,
+				        person);
 
 				if (worksite == null) {
 					// object not found!
 					System.out.println("A suitable worksite was not found.");
 					return null;
 
-				} 
+				}
 
-				System.out.println("A suitable worksite was successfully found.");
+				System.out
+				        .println("A suitable worksite was successfully found.");
 				requiredObjects.put("worksite", worksite);
 
-			}
-			else if(currentRequirement instanceof SkillCheckRequirement){				
-			
+			} else if (currentRequirement instanceof SkillCheckRequirement) {
+
 				// iterate through skills, make sure values are good
-				Map<String,Integer> requiredSkills = ((SkillCheckRequirement) currentRequirement).getSkills();
-				Set<Entry<String, Integer>> setSkills = requiredSkills.entrySet();
+				Map<String, Integer> requiredSkills = ((SkillCheckRequirement) currentRequirement)
+				        .getSkills();
+				Set<Entry<String, Integer>> setSkills = requiredSkills
+				        .entrySet();
 				Iterator<Entry<String, Integer>> iter = setSkills.iterator();
-				while(iter.hasNext()) {
-					Entry<String,Integer> skill = iter.next();
+				while (iter.hasNext()) {
+					Entry<String, Integer> skill = iter.next();
 					String skillName = skill.getKey();
 					Integer skillValue = skill.getValue();
 					Integer personSkillValue = person.getSkillValue(skillName);
-					if(personSkillValue.intValue() < skillValue.intValue()) {
-						//FAIL
-						System.out.println("required skill <" + skillName + "> too low.  Expected <" 
-								+ skillValue.intValue() + ">, got <" + personSkillValue.intValue() + ">");
+					if (personSkillValue.intValue() < skillValue.intValue()) {
+						// FAIL
+						System.out.println("required skill <" + skillName
+						        + "> too low.  Expected <"
+						        + skillValue.intValue() + ">, got <"
+						        + personSkillValue.intValue() + ">");
 						return null;
 					} else {
-						System.out.println("required skill <" + skillName + "> is sufficient.");
+						System.out.println("required skill <" + skillName
+						        + "> is sufficient.");
 					}
-				}
-				
-			}
 
+				}
+
+			}
 
 		}
 
@@ -142,7 +146,7 @@ public class DecisionNode {
 	}
 
 	public List<Requirement> getRequirements() {
-		return requirements;
+		return this.requirements;
 	}
 
 	public void setRequirements(List<Requirement> requirements) {
