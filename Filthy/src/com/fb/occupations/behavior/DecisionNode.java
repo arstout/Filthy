@@ -65,13 +65,13 @@ public class DecisionNode {
 
 				if (worksite == null) {
 					// object not found!
-					System.out.println("A suitable worksite was not found.");
+					System.out.println("\t\t\tA suitable worksite was not found.");
 					return null;
 
 				}
 
 				System.out
-				        .println("A suitable worksite was successfully found.");
+				        .println("\t\tA suitable worksite was successfully found.");
 				requiredObjects.put("worksite", worksite);
 
 			} else if (currentRequirement instanceof SkillCheckRequirement) {
@@ -89,13 +89,13 @@ public class DecisionNode {
 					Integer personSkillValue = person.getSkillValue(skillName);
 					if (personSkillValue.intValue() < skillValue.intValue()) {
 						// FAIL
-						System.out.println("required skill <" + skillName
+						System.out.println("\t\t\tRequired skill <" + skillName
 						        + "> too low.  Expected <"
 						        + skillValue.intValue() + ">, got <"
 						        + personSkillValue.intValue() + ">");
 						return null;
 					} else {
-						System.out.println("required skill <" + skillName
+						System.out.println("\t\t\tRequired skill <" + skillName
 						        + "> is sufficient.");
 					}
 

@@ -26,11 +26,11 @@ public class WorkAction extends Action {
 
 	public void complete(Person person) {
 
-		System.out.println(person.getName() + " has completed " + getName());
+		System.out.println("\t" + person.getName() + " has completed " + getName() + ".");
 		person.removeActionFromQueue();
 
 		// execute post-action changes
-		System.out.println("executing action complete steps");
+		System.out.println("\t\tExecuting action complete steps");
 		this.worksite.removeWorker(person);
 		Iterator<Change> changeIter = changes.iterator();
 		while (changeIter.hasNext()) {
@@ -48,9 +48,9 @@ public class WorkAction extends Action {
 				String attribute = ((ObjectAttributeChange) change)
 						.getAttribute();
 				String value = ((ObjectAttributeChange) change).getValue();
-				System.out.println("Changing object "
+				System.out.println("\t\tChanging object "
 						+ objectToChange.getName() + ": Attribute " + attribute
-						+ " will be given a value of " + value);
+						+ " will be given a value of " + value + ".");
 				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
 						attribute, value);
 			}
@@ -59,10 +59,10 @@ public class WorkAction extends Action {
 	}
 
 	public void turn(Person person) {
-		System.out.println(person.getName() + " continues to work on "
+		System.out.println("\t" + person.getName() + " continues to work on "
 				+ getName());
 		this.state = getWorksite().performWork(person.getWorkOutputPerTurn());
-		System.out.println("Work left to do on " + getWorksite().getName()
+		System.out.println("\t\tWork left to do on " + getWorksite().getName()
 				+ " is " + getWorksite().getTurnsUntilWorkComplete());
 	}
 
@@ -76,7 +76,7 @@ public class WorkAction extends Action {
 
 	@Override
 	public void start(Person person) {
-		System.out.println(person.getName() + " is about to begin work on "
+		System.out.println("\t" + person.getName() + " is about to begin work on "
 				+ getName());
 		this.state = "ACTIVE";
 

@@ -21,22 +21,22 @@ public class SimpleAction extends Action {
 
 	@Override
 	public void complete(Person person) {
-		System.out.println(person.getName() + " has completed " + getName());
+		System.out.println("\t" + person.getName() + " has completed " + getName());
 		person.removeActionFromQueue();
 	}
 
 	@Override
 	public void start(Person person) {
-		System.out.println(person.getName() + " is about to begin work on "
+		System.out.println("\t" + person.getName() + " is about to begin work on "
 		        + getName());
 		this.state = "ACTIVE";
 	}
 
 	public void turn(Person person) {
-		System.out.println(person.getName() + " continues to work on "
+		System.out.println("\t" + person.getName() + " continues to work on "
 		        + getName());
 		this.turnsUntilComplete--;
-		System.out.println(this.name + " has " + turnsUntilComplete
+		System.out.println("\t\t" + this.name + " has " + turnsUntilComplete
 		        + " turns left until completion.");
 		if (this.turnsUntilComplete <= 0) {
 			this.state = "COMPLETED";

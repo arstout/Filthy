@@ -53,8 +53,7 @@ public class Main {
 
 		// build farmer behavior tree tree
 		BehaviorTree simpleFarmerTree = new BehaviorTree("simple_farmer_tree");
-		DecisionNode findFieldToCultivate = new DecisionNode(
-		        "find_field_to_cultivate");
+		DecisionNode findFieldToCultivate = new DecisionNode("find_field_to_cultivate");
 
 		// decision requirements
 

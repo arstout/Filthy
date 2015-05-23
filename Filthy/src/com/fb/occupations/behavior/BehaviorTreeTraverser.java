@@ -23,7 +23,7 @@ public class BehaviorTreeTraverser {
 
 	public void traverseNode(DecisionNode decisionNode) {
 
-		System.out.println(person.getName()
+		System.out.println("\t\t" + person.getName()
 		        + " is attempting to execute decision "
 		        + decisionNode.getName() + ".");
 
@@ -32,7 +32,7 @@ public class BehaviorTreeTraverser {
 
 		if (requiredObjects == null) {
 			// FALSE PATH
-			System.out.println("Decision <" + decisionNode.getName()
+			System.out.println("\t\t\tDecision <" + decisionNode.getName()
 			        + "> has failed pre-requisites for <" + person.getName()
 			        + ">.");
 			Queue<DecisionStep> failedDesicionSteps = decisionNode
@@ -56,7 +56,7 @@ public class BehaviorTreeTraverser {
 
 		} else {
 			// TRUE PATH
-			System.out.println("Decision <" + decisionNode.getName()
+			System.out.println("\t\tDecision <" + decisionNode.getName()
 			        + "> has passed pre-requisites for <" + person.getName()
 			        + ">.");
 			Queue<DecisionStep> passedDesicionSteps = decisionNode
@@ -84,8 +84,8 @@ public class BehaviorTreeTraverser {
 	private void handleActionStep(DecisionNode decisionNode,
 	        DecisionStep currentDecisionStep,
 	        Map<String, GameObject> requiredObjects) {
-		System.out.println("adding action <" + currentDecisionStep.getName()
-		        + "> to queue of <" + this.person.getName() + ">.");
+		System.out.println("\t\tAdding action <" + currentDecisionStep.getName()
+		        + "> to queue of <" + this.person.getName() + ">.\n");
 		Action action = decisionNode.getAction(currentDecisionStep.getName());
 		if (action instanceof WorkAction) {
 			WorkAction workAction = new WorkAction((WorkAction) action);
@@ -135,7 +135,7 @@ public class BehaviorTreeTraverser {
 				break;
 			}
 		} else {
-			System.out.println(person.getName() + " has no current action.");
+			System.out.println("\t" + person.getName() + " has no current action.");
 			// go to parent node
 			traverseNode(behaviorTree.getParentNode());
 		}
