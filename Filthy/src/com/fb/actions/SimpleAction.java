@@ -18,7 +18,6 @@ public class SimpleAction extends Action {
 		this.turnsUntilComplete = duration;
 	}
 
-
 	protected SimpleAction(SimpleAction action) {
 
 		this.duration = action.duration;
@@ -56,7 +55,7 @@ public class SimpleAction extends Action {
 
 		System.out.println("\t" + person.getName() + " continues to perform "
 
-		        + getName());
+		+ getName());
 		this.turnsUntilComplete--;
 		System.out.println("\t\t" + this.name + " has " + turnsUntilComplete
 		        + " turns left until completion.");

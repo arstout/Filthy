@@ -11,8 +11,10 @@ public class BehaviorTreeStore {
 		return behaviorTreeStore;
 	}
 
-	public static void addBehaviorTree(BehaviorTree behaviorTree) {
-		behaviorTreeStore.put(behaviorTree.getName(), behaviorTree);
+	public static BehaviorTree createBehaviorTree(String name) {
+		BehaviorTree bt = new BehaviorTree(name);
+		behaviorTreeStore.put(name, bt);
+		return bt;
 	}
 
 	public BehaviorTree getBehaviorTree(String name) {

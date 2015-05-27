@@ -27,9 +27,6 @@ public class DecisionNode {
 	/* Steps that will be processed if Node returns false */
 	private Queue<DecisionStep> failedDecisionSteps = new PriorityQueue<DecisionStep>();
 
-	/* Map of actions to take for this Node */
-	private Map<String, Action> actions = new HashMap<String, Action>();
-
 	/* Required objects for this decision */
 	private Map<String, GameObject> requiredObjects = new HashMap<String, GameObject>();
 
@@ -80,14 +77,6 @@ public class DecisionNode {
 
 	public Queue<DecisionStep> getPassedDecisionSteps() {
 		return this.passedDecisionSteps;
-	}
-
-	public void addAction(Action action) {
-		this.actions.put(action.getName(), action);
-	}
-
-	public Action getAction(String name) {
-		return actions.get(name);
 	}
 
 	public void addRequirement(Requirement requirement) {

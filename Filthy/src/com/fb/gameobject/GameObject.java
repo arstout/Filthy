@@ -2,8 +2,10 @@ package com.fb.gameobject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class GameObject {
@@ -13,6 +15,7 @@ public class GameObject {
 	private String name = "";
 	private Person owner;
 	private List<GameObject> inventory = new ArrayList<GameObject>();
+	private Set<String> types = new HashSet<String>();
 
 	protected GameObject(String name) {
 		this.name = name;
@@ -26,6 +29,18 @@ public class GameObject {
 
 	public Attribute getAttribute(String name) {
 		return this.attributes.get(name);
+	}
+
+	public Set<String> getTypes() {
+		return types;
+	}
+
+	public void addType(String type) {
+		this.types.add(type);
+	}
+
+	public void removeType(String type) {
+		this.types.remove(type);
 	}
 
 	public void addAttribute(String name, String value) {

@@ -13,7 +13,7 @@ public class BehaviorTree {
 		return this.decisionNodeMap.get(name);
 	}
 
-	public BehaviorTree(String name) {
+	protected BehaviorTree(String name) {
 		this.name = name;
 	}
 

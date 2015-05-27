@@ -13,16 +13,15 @@ public class SkillCheckRequirement extends Requirement {
 
 	private Map<String, Integer> skills = new HashMap<String, Integer>();
 
-	public SkillCheckRequirement(Map<String, Integer> skills) {
-		this.skills = skills;
+	protected SkillCheckRequirement() {
 	}
 
 	public Map<String, Integer> getSkills() {
 		return skills;
 	}
 
-	public void setSkills(Map<String, Integer> skills) {
-		this.skills = skills;
+	public void addSkill(String name, int value) {
+		this.skills.put(name, new Integer(value));
 	}
 
 	public boolean check(Person person, Map<String, GameObject> requiredObjects) {

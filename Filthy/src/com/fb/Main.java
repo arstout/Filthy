@@ -1,14 +1,11 @@
 package com.fb;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import com.fb.actions.Action;
 import com.fb.actions.ActionStore;
 import com.fb.changes.ObjectAttributeChange;
-import com.fb.gameobject.Attribute;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.GameObjectStore;
 import com.fb.gameobject.Person;
@@ -20,6 +17,7 @@ import com.fb.occupations.behavior.BehaviorTreeStore;
 import com.fb.occupations.behavior.BehaviorTreeTraverser;
 import com.fb.occupations.behavior.DecisionNode;
 import com.fb.occupations.behavior.DecisionStep;
+import com.fb.occupations.behavior.requirements.RequirementFactory;
 import com.fb.occupations.behavior.requirements.WorksiteRequirement;
 import com.fb.occupations.behavior.requirements.SkillCheckRequirement;
 
@@ -30,8 +28,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		// define actions
-		Action derp = ActionStore.createSimpleAction("derp", 1);
-
+		ActionStore.createSimpleAction("derp", 1);
 
 		Action cultivateField = ActionStore.createWorkAction("cultivate_field");
 		cultivateField.addChange(new ObjectAttributeChange("worksite",
@@ -46,22 +43,21 @@ public class Main {
 		        "watered"));
 
 		// build farmer behavior tree tree
-		BehaviorTree simpleFarmerTree = new BehaviorTree("simple_farmer_tree");
+		BehaviorTree simpleFarmerTree = BehaviorTreeStore
+		        .createBehaviorTree("simple_farmer_tree");
 
+		// define decision: find field to cultivate
 		DecisionNode findFieldToCultivate = new DecisionNode(
 		        "find_field_to_cultivate");
 
-		// decision requirements
-
-		// find a worksite
-		WorksiteRequirement req = new WorksiteRequirement("field");
-		req.addAttribute("status", new Attribute("status", "uncultivated"));
+		WorksiteRequirement req = RequirementFactory
+		        .createWorksiteRequirement("field");
+		req.addSimpleAttribute("status", "uncultivated");
 		findFieldToCultivate.addRequirement(req);
 
-		Map<String, Integer> skills = new HashMap<String, Integer>();
-		skills.put("CULTIVATION", new Integer(1));
-		SkillCheckRequirement sreq = new SkillCheckRequirement(skills);
-
+		SkillCheckRequirement sreq = RequirementFactory
+		        .createSkillCheckRequirement();
+		sreq.addSkill("CULTIVATION", 1);
 		findFieldToCultivate.addRequirement(sreq);
 
 		findFieldToCultivate.addFailedDecisionStep(new DecisionStep("ACTION",
@@ -69,21 +65,17 @@ public class Main {
 		findFieldToCultivate.addPassedDecisionStep(new DecisionStep("ACTION",
 		        "cultivate_field"));
 
-		findFieldToCultivate.addAction(cultivateField);
-		findFieldToCultivate.addAction(derp);
-
 		simpleFarmerTree.addDecisionNode(findFieldToCultivate);
 
+		// define decision: find field to plant
 		DecisionNode findFieldToPlant = new DecisionNode("find_field_to_plant");
 
-		req = new WorksiteRequirement("field");
-		req.addAttribute("status", new Attribute("status", "cultivated"));
+		req = RequirementFactory.createWorksiteRequirement("field");
+		req.addSimpleAttribute("status", "cultivated");
 		findFieldToPlant.addRequirement(req);
 
-		skills = new HashMap<String, Integer>();
-		skills.put("PLANTING", new Integer(1));
-		sreq = new SkillCheckRequirement(skills);
-
+		sreq = RequirementFactory.createSkillCheckRequirement();
+		sreq.addSkill("PLANTING", 1);
 		findFieldToPlant.addRequirement(sreq);
 
 		findFieldToPlant.addFailedDecisionStep(new DecisionStep("DECISION",
@@ -91,21 +83,17 @@ public class Main {
 		findFieldToPlant.addPassedDecisionStep(new DecisionStep("ACTION",
 		        "plant_field"));
 
-		findFieldToPlant.addAction(plantField);
-		findFieldToPlant.addAction(derp);
-
 		simpleFarmerTree.addDecisionNode(findFieldToPlant);
 
+		// define decision: find field to water
 		DecisionNode findFieldToWater = new DecisionNode("find_field_to_water");
 
-		req = new WorksiteRequirement("field");
-		req.addAttribute("status", new Attribute("status", "planted"));
+		req = RequirementFactory.createWorksiteRequirement("field");
+		req.addSimpleAttribute("status", "planted");
 		findFieldToWater.addRequirement(req);
 
-		skills = new HashMap<String, Integer>();
-		skills.put("WATERING", new Integer(1));
-		sreq = new SkillCheckRequirement(skills);
-
+		sreq = RequirementFactory.createSkillCheckRequirement();
+		sreq.addSkill("WATERING", 1);
 		findFieldToWater.addRequirement(sreq);
 
 		findFieldToWater.addFailedDecisionStep(new DecisionStep("DECISION",
@@ -113,15 +101,10 @@ public class Main {
 		findFieldToWater.addPassedDecisionStep(new DecisionStep("ACTION",
 		        "water_field"));
 
-		findFieldToWater.addAction(waterField);
-		findFieldToWater.addAction(derp);
-
 		simpleFarmerTree.addDecisionNode(findFieldToWater);
 
+		// prime the simple farmer tree
 		simpleFarmerTree.setParentNode("find_field_to_water");
-
-		// decisions
-		BehaviorTreeStore.addBehaviorTree(simpleFarmerTree);
 
 		// set up occupations
 		Occupation simpleFarmer = new Occupation("Simple Farmer");
@@ -130,20 +113,17 @@ public class Main {
 		OccupationStore.addOccupation(simpleFarmer);
 
 		// set up people
-
 		Person john = GameObjectStore.createPerson("Farmer John", 20);
 		john.addSkill("CULTIVATION", new Integer(5));
 		john.addSkill("WATERING", new Integer(5));
 		john.addSkill("PLANTING", new Integer(5));
 		john.setOccupation(simpleFarmer);
 
-		// set up people
 		Person sam = GameObjectStore.createPerson("Farmer Sam", 19);
 		sam.addSkill("PLANTING", new Integer(5));
 		sam.setOccupation(simpleFarmer);
 		sam.setEmployer(john);
 
-		// set up people
 		Person joe = GameObjectStore.createPerson("Farmer Joe", 19);
 		joe.addSkill("CULTIVATION", new Integer(5));
 		joe.addSkill("WATERING", new Integer(5));

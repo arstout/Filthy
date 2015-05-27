@@ -20,14 +20,11 @@ public class BehaviorTreeTraverser {
 
 	public void traverseNode(DecisionNode decisionNode) {
 
-
 		// System.out.println("\t\t" + person.getName()
 		// + " is attempting to execute decision "
 		// + decisionNode.getName() + ".");
 
-
 		boolean decisionPassed = decisionNode.checkRequirements(person);
-
 
 		Queue<DecisionStep> decisionSteps = null;
 
@@ -39,7 +36,6 @@ public class BehaviorTreeTraverser {
 			// + ">.");
 			decisionSteps = decisionNode.getFailedDecisionSteps();
 		} else {
-
 
 			// passed steps are the chosen ones
 			// System.out.println("\t\tDecision <" + decisionNode.getName()
@@ -68,7 +64,6 @@ public class BehaviorTreeTraverser {
 	private void handleActionStep(DecisionNode decisionNode,
 	        DecisionStep currentDecisionStep,
 	        Map<String, GameObject> requiredObjects) {
-
 
 		System.out.println("\t\tAdding action <"
 		        + currentDecisionStep.getName() + "> to queue of <"

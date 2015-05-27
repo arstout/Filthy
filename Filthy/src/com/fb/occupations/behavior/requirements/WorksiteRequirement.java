@@ -14,7 +14,7 @@ public class WorksiteRequirement extends Requirement {
 	private String type;
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 
-	public WorksiteRequirement(String type) {
+	protected WorksiteRequirement(String type) {
 		this.type = type;
 	}
 
@@ -30,8 +30,8 @@ public class WorksiteRequirement extends Requirement {
 		return attributes;
 	}
 
-	public void addAttribute(String attributeName, Attribute attribute) {
-		this.attributes.put(attributeName, attribute);
+	public void addSimpleAttribute(String name, String value) {
+		this.attributes.put(name, new Attribute(name, value));
 	}
 
 	public boolean check(Person person, Map<String, GameObject> requiredObjects) {

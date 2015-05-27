@@ -18,7 +18,6 @@ public class GameObjectStore {
 		return getSubStore("all");
 	}
 
-
 	public static Person createPerson(String name, int age) {
 
 		return new Person(name, age);
@@ -54,11 +53,13 @@ public class GameObjectStore {
 	public static void classifyGameObject(GameObject gameObject, String type) {
 
 		getSubStore(type).add(gameObject);
+		gameObject.addType(type);
 	}
 
 	public static void declassifyGameObject(GameObject gameObject, String type) {
 
 		getSubStore(type).remove(gameObject);
+		gameObject.removeType(type);
 	}
 
 	public static void removeGameObject(GameObject gameObject) {
@@ -70,7 +71,7 @@ public class GameObjectStore {
 
 	public static GameObject findGameObject(String type,
 
-	        Map<String, Attribute> attributes, Person owner) {
+	Map<String, Attribute> attributes, Person owner) {
 
 		Set<GameObject> subSet = getSubStore(type);
 
@@ -103,7 +104,7 @@ public class GameObjectStore {
 				String attr1 = attributes.get(attributeName).getValue();
 				String attr2 = gameObject.getAttribute(attributeName)
 
-				        .getValue();
+				.getValue();
 
 				if (!attr1.equals(attr2)) {
 					// this attribute does not match.
@@ -128,7 +129,7 @@ public class GameObjectStore {
 
 	public static Worksite findWorksite(Map<String, Attribute> attributes,
 
-	        Person owner) {
+	Person owner) {
 
 		Set<GameObject> subSet = getSubStore("worksite");
 
@@ -161,7 +162,7 @@ public class GameObjectStore {
 				String attr1 = attributes.get(attributeName).getValue();
 				String attr2 = gameObject.getAttribute(attributeName)
 
-				        .getValue();
+				.getValue();
 
 				if (!attr1.equals(attr2)) {
 					// this attribute does not match.

@@ -14,7 +14,6 @@ public class Worksite extends GameObject {
 	private int maxWorkers;
 	private boolean inUse = false;;
 
-
 	protected Worksite(String name) {
 		super(name);
 		GameObjectStore.classifyGameObject(this, "worksite");

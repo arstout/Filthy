@@ -24,7 +24,6 @@ public class WorkAction extends Action {
 		this.changes = action.changes;
 	}
 
-
 	public void prepare(Person person, Map<String, GameObject> requiredObjects) {
 
 		// get worksite
@@ -50,7 +49,6 @@ public class WorkAction extends Action {
 
 	public void complete(Person person) {
 
-
 		System.out.println("\t" + person.getName() + " has completed "
 		        + getName() + ".");
 
@@ -65,7 +63,7 @@ public class WorkAction extends Action {
 			if (change instanceof ObjectAttributeChange) {
 				String objectId = ((ObjectAttributeChange) change)
 
-				        .getObjectId();
+				.getObjectId();
 
 				GameObject objectToChange = null;
 				if (objectId.equals("worksite")) {
@@ -79,7 +77,7 @@ public class WorkAction extends Action {
 				String value = ((ObjectAttributeChange) change).getValue();
 				System.out.println("\t\tChanging object "
 
-				        + objectToChange.getName() + ": Attribute " + attribute
+				+ objectToChange.getName() + ": Attribute " + attribute
 				        + " will be given a value of " + value + ".");
 
 				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
@@ -92,12 +90,12 @@ public class WorkAction extends Action {
 	public void turn(Person person) {
 		System.out.println("\t" + person.getName() + " continues to work on "
 
-		        + getName());
+		+ getName());
 
 		this.state = getWorksite().performWork(person.getWorkOutputPerTurn());
 		System.out.println("\t\tWork left to do on " + getWorksite().getName()
 
-		        + " is " + getWorksite().getTurnsUntilWorkComplete());
+		+ " is " + getWorksite().getTurnsUntilWorkComplete());
 
 	}
 
