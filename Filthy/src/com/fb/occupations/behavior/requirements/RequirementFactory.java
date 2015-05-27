@@ -10,8 +10,9 @@ public class RequirementFactory {
 		return new SkillCheckRequirement();
 	}
 
-	public static InventoryCheckRequirement createInventoryCheckRequirement() {
-		return new InventoryCheckRequirement();
+	public static InventoryCheckRequirement createInventoryCheckRequirement(
+	        String type) {
+		return new InventoryCheckRequirement(type);
 	}
 
 }

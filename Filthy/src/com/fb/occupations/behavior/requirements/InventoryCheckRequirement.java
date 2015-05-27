@@ -15,7 +15,8 @@ public class InventoryCheckRequirement extends Requirement {
 	private String type;
 	private Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 
-	protected InventoryCheckRequirement() {
+	protected InventoryCheckRequirement(String type) {
+		this.type = type;
 	}
 
 	public String getType() {
@@ -36,12 +37,14 @@ public class InventoryCheckRequirement extends Requirement {
 
 	public boolean check(Person person, Map<String, GameObject> requiredObjects) {
 
+		System.out.println("checking inventory");
 		// check Person's inventory for a suitable item
 		List<GameObject> personInventory = person.getInventory();
 
 		boolean failedInvCheck = false;
 		for (GameObject gameObject : personInventory) {
 
+			System.out.println("checking object " + gameObject.getName());
 			// is it of the correct type?
 			if (!gameObject.getTypes().contains(type)) {
 				failedInvCheck = true;
@@ -73,11 +76,13 @@ public class InventoryCheckRequirement extends Requirement {
 
 		if (failedInvCheck) {
 			// object not found!
-			// System.out.println("\t\t\tA suitable inventory item was not found.");
+			System.out
+			        .println("\t\t\tA suitable inventory item was not found.");
 			return false;
 		}
 
-		// System.out.println("\t\t\tA suitable inventory item was successfully found.");
+		System.out
+		        .println("\t\t\tA suitable inventory item was successfully found.");
 
 		// requiredObjects.put("worksite", worksite);
 

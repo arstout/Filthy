@@ -27,6 +27,7 @@ public class SkillCheckRequirement extends Requirement {
 	public boolean check(Person person, Map<String, GameObject> requiredObjects) {
 		// iterate through skills, make sure values are good
 
+		System.out.println("checking skill");
 		Set<Entry<String, Integer>> setSkills = this.skills.entrySet();
 		Iterator<Entry<String, Integer>> iter = setSkills.iterator();
 		while (iter.hasNext()) {

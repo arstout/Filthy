@@ -17,6 +17,7 @@ import com.fb.occupations.behavior.BehaviorTreeStore;
 import com.fb.occupations.behavior.BehaviorTreeTraverser;
 import com.fb.occupations.behavior.DecisionNode;
 import com.fb.occupations.behavior.DecisionStep;
+import com.fb.occupations.behavior.requirements.InventoryCheckRequirement;
 import com.fb.occupations.behavior.requirements.RequirementFactory;
 import com.fb.occupations.behavior.requirements.WorksiteRequirement;
 import com.fb.occupations.behavior.requirements.SkillCheckRequirement;
@@ -74,6 +75,11 @@ public class Main {
 		req.addSimpleAttribute("status", "cultivated");
 		findFieldToPlant.addRequirement(req);
 
+		// InventoryCheckRequirement ireq =
+		// RequirementFactory.createInventoryCheckRequirement("seed");
+		// ireq.addSimpleAttribute("seed_type", "pepper");
+		// findFieldToPlant.addRequirement(ireq);
+
 		sreq = RequirementFactory.createSkillCheckRequirement();
 		sreq.addSkill("PLANTING", 1);
 		findFieldToPlant.addRequirement(sreq);
@@ -119,10 +125,21 @@ public class Main {
 		john.addSkill("PLANTING", new Integer(5));
 		john.setOccupation(simpleFarmer);
 
+		// lets give the dunst some seeds
+		GameObject seed1 = GameObjectStore.createGameObject("Tomato Seed");
+		seed1.addType("seed");
+		seed1.addAttribute("seed_type", "tomato");
+		john.addToInventory(seed1);
+
 		Person sam = GameObjectStore.createPerson("Farmer Sam", 19);
 		sam.addSkill("PLANTING", new Integer(5));
 		sam.setOccupation(simpleFarmer);
 		sam.setEmployer(john);
+
+		seed1 = GameObjectStore.createGameObject("Pepper Seed");
+		seed1.addType("seed");
+		seed1.addAttribute("seed_type", "pepper");
+		sam.addToInventory(seed1);
 
 		Person joe = GameObjectStore.createPerson("Farmer Joe", 19);
 		joe.addSkill("CULTIVATION", new Integer(5));
@@ -141,7 +158,7 @@ public class Main {
 		bobsSouth40.addActionDuration("cultivate_field", 20);
 		bobsSouth40.addActionDuration("plant_field", 5);
 		bobsSouth40.addActionDuration("water_field", 10);
-		GameObjectStore.classifyGameObject(bobsSouth40, "field");
+		bobsSouth40.addType("field");
 
 		Worksite bobsNorth40 = GameObjectStore.createWorksite("Bob's North 80");
 		bobsNorth40.addAttribute("status", "uncultivated");
@@ -150,13 +167,13 @@ public class Main {
 		bobsNorth40.addActionDuration("cultivate_field", 30);
 		bobsNorth40.addActionDuration("plant_field", 10);
 		bobsNorth40.addActionDuration("water_field", 20);
-		GameObjectStore.classifyGameObject(bobsNorth40, "field");
+		bobsNorth40.addType("field");
 
 		while (true) {
 			turn++;
 
 			try {
-				Thread.sleep(100);
+				Thread.sleep(1000);
 			} catch (Exception e) {
 
 			}
