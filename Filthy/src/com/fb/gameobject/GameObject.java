@@ -14,7 +14,7 @@ public class GameObject {
 	private Person owner;
 	private List<GameObject> inventory = new ArrayList<GameObject>();
 
-	public GameObject(String name) {
+	protected GameObject(String name) {
 		this.name = name;
 		addAttribute("objectId", UUID.randomUUID().toString());
 		GameObjectStore.addGameObject(this);

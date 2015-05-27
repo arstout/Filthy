@@ -3,13 +3,10 @@ package com.fb;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import com.fb.actions.Action;
 import com.fb.actions.ActionStore;
-import com.fb.actions.SimpleAction;
-import com.fb.actions.WorkAction;
 import com.fb.changes.ObjectAttributeChange;
 import com.fb.gameobject.Attribute;
 import com.fb.gameobject.GameObject;
@@ -33,27 +30,26 @@ public class Main {
 	public static void main(String[] args) {
 
 		// define actions
-		Action derp = new SimpleAction("derp", 1);
-		ActionStore.addAction(derp);
+		Action derp = ActionStore.createSimpleAction("derp", 1);
 
-		Action cultivateField = new WorkAction("cultivate_field");
+
+		Action cultivateField = ActionStore.createWorkAction("cultivate_field");
 		cultivateField.addChange(new ObjectAttributeChange("worksite",
 		        "status", "cultivated"));
-		ActionStore.addAction(cultivateField);
 
-		Action plantField = new WorkAction("plant_field");
+		Action plantField = ActionStore.createWorkAction("plant_field");
 		plantField.addChange(new ObjectAttributeChange("worksite", "status",
 		        "planted"));
-		ActionStore.addAction(plantField);
 
-		Action waterField = new WorkAction("water_field");
+		Action waterField = ActionStore.createWorkAction("water_field");
 		waterField.addChange(new ObjectAttributeChange("worksite", "status",
 		        "watered"));
-		ActionStore.addAction(waterField);
 
 		// build farmer behavior tree tree
 		BehaviorTree simpleFarmerTree = new BehaviorTree("simple_farmer_tree");
-		DecisionNode findFieldToCultivate = new DecisionNode("find_field_to_cultivate");
+
+		DecisionNode findFieldToCultivate = new DecisionNode(
+		        "find_field_to_cultivate");
 
 		// decision requirements
 
@@ -134,20 +130,21 @@ public class Main {
 		OccupationStore.addOccupation(simpleFarmer);
 
 		// set up people
-		Person john = new Person("Farmer John", "20");
+
+		Person john = GameObjectStore.createPerson("Farmer John", 20);
 		john.addSkill("CULTIVATION", new Integer(5));
 		john.addSkill("WATERING", new Integer(5));
 		john.addSkill("PLANTING", new Integer(5));
 		john.setOccupation(simpleFarmer);
 
 		// set up people
-		Person sam = new Person("Farmer Sam", "19");
+		Person sam = GameObjectStore.createPerson("Farmer Sam", 19);
 		sam.addSkill("PLANTING", new Integer(5));
 		sam.setOccupation(simpleFarmer);
 		sam.setEmployer(john);
 
 		// set up people
-		Person joe = new Person("Farmer Joe", "19");
+		Person joe = GameObjectStore.createPerson("Farmer Joe", 19);
 		joe.addSkill("CULTIVATION", new Integer(5));
 		joe.addSkill("WATERING", new Integer(5));
 		joe.setOccupation(simpleFarmer);
@@ -157,21 +154,21 @@ public class Main {
 		john.addEmployee(sam);
 
 		// create game objects
-		Worksite bobsSouth40 = new Worksite("Bob's South 40");
+		Worksite bobsSouth40 = GameObjectStore.createWorksite("Bob's South 40");
 		bobsSouth40.addAttribute("status", "uncultivated");
 		bobsSouth40.setOwner(john);
 		bobsSouth40.setMaxWorkers(5);
-		bobsSouth40.addActionDuration("cultivate_field", 10);
-		bobsSouth40.addActionDuration("plant_field", 10);
+		bobsSouth40.addActionDuration("cultivate_field", 20);
+		bobsSouth40.addActionDuration("plant_field", 5);
 		bobsSouth40.addActionDuration("water_field", 10);
 		GameObjectStore.classifyGameObject(bobsSouth40, "field");
 
-		Worksite bobsNorth40 = new Worksite("Bob's North 80");
+		Worksite bobsNorth40 = GameObjectStore.createWorksite("Bob's North 80");
 		bobsNorth40.addAttribute("status", "uncultivated");
 		bobsNorth40.setOwner(john);
 		bobsNorth40.setMaxWorkers(10);
-		bobsNorth40.addActionDuration("cultivate_field", 20);
-		bobsNorth40.addActionDuration("plant_field", 20);
+		bobsNorth40.addActionDuration("cultivate_field", 30);
+		bobsNorth40.addActionDuration("plant_field", 10);
 		bobsNorth40.addActionDuration("water_field", 20);
 		GameObjectStore.classifyGameObject(bobsNorth40, "field");
 
@@ -179,9 +176,9 @@ public class Main {
 			turn++;
 
 			try {
-				Thread.sleep(1000);
+				Thread.sleep(100);
 			} catch (Exception e) {
-				//Do nothing
+
 			}
 
 			System.out.println("TURN <" + turn + ">");
@@ -191,6 +188,7 @@ public class Main {
 			Iterator<GameObject> peopleIter = people.iterator();
 
 			while (peopleIter.hasNext()) {
+
 				Person currentPerson = (Person) (peopleIter.next());
 				new BehaviorTreeTraverser(currentPerson).traverse();
 

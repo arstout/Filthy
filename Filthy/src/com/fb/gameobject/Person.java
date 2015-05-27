@@ -1,9 +1,7 @@
 package com.fb.gameobject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
@@ -17,18 +15,29 @@ public class Person extends GameObject {
 	private Queue<Action> actionQueue = new PriorityQueue<Action>();
 	private Occupation occupation;
 	private Person employer;
+	private int age;
 	private Set<Person> employees = new HashSet<Person>();
 	private Map<String, Integer> skills = new HashMap<String, Integer>();
 	private int workOutputPerTurn = 1;
 
-	public Person(String name, String age) {
+
+	protected Person(String name, int age) {
 		super(name);
-		this.addAttribute("age", age);
+
 		GameObjectStore.classifyGameObject(this, "person");
 	}
 
 	public void addSkill(String skill, Integer value) {
 		skills.put(skill, value);
+	}
+
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
 	}
 
 	public Integer getSkillValue(String name) {

@@ -16,6 +16,9 @@ public abstract class Action {
 	protected String state = "QUEUED";
 	protected List<Change> changes = new ArrayList<Change>();
 
+	public abstract void prepare(Person person,
+	        Map<String, GameObject> requiredObjects);
+
 	public abstract void start(Person person);
 
 	public abstract void complete(Person person);

@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.fb.gameobject.Attribute;
+import com.fb.gameobject.GameObject;
+import com.fb.gameobject.GameObjectStore;
+import com.fb.gameobject.Person;
+import com.fb.gameobject.Worksite;
 
 public class WorksiteRequirement extends Requirement {
 
@@ -30,5 +34,22 @@ public class WorksiteRequirement extends Requirement {
 		this.attributes.put(attributeName, attribute);
 	}
 
+	public boolean check(Person person, Map<String, GameObject> requiredObjects) {
+
+		Worksite worksite = GameObjectStore.findWorksite(this.attributes,
+		        person);
+
+		if (worksite == null) {
+			// object not found!
+			// System.out.println("\t\t\tA suitable worksite was not found.");
+			return false;
+		}
+
+		// System.out.println("\t\t\tA suitable worksite was successfully found.");
+
+		requiredObjects.put("worksite", worksite);
+
+		return true;
+	}
 
 }

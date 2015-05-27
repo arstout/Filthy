@@ -5,20 +5,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.Queue;
-import java.util.Set;
 
 import com.fb.actions.Action;
-import com.fb.gameobject.Attribute;
 import com.fb.gameobject.GameObject;
-import com.fb.gameobject.GameObjectStore;
 import com.fb.gameobject.Person;
-import com.fb.gameobject.Worksite;
-import com.fb.occupations.behavior.requirements.WorksiteRequirement;
 import com.fb.occupations.behavior.requirements.Requirement;
-import com.fb.occupations.behavior.requirements.SkillCheckRequirement;
 
 public class DecisionNode {
 
@@ -37,75 +30,39 @@ public class DecisionNode {
 	/* Map of actions to take for this Node */
 	private Map<String, Action> actions = new HashMap<String, Action>();
 
+	/* Required objects for this decision */
+	private Map<String, GameObject> requiredObjects = new HashMap<String, GameObject>();
+
 	public DecisionNode(String name) {
 		super();
 		this.name = name;
 	}
 
-	public Map<String, GameObject> checkRequirements(Person person) {
+	public Map<String, GameObject> getRequiredObjects() {
+		return requiredObjects;
+	}
+
+	public boolean checkRequirements(Person person) {
 
 		// check requirements
 		Iterator<Requirement> requirementsIter = this.requirements.iterator();
 
-		Map<String, GameObject> requiredObjects = new HashMap<String, GameObject>();
 		while (requirementsIter.hasNext()) {
 			Requirement currentRequirement = requirementsIter.next();
 
-			// Check to see if an object exists and verify attributes on this
-			// object.
 			// TODO: Verify this with additional scope (personal, communal,
 			// global)
-			if (currentRequirement instanceof WorksiteRequirement) {
 
-				Map<String, Attribute> attributes = ((WorksiteRequirement) currentRequirement)
-				        .getAttributes();
-
-				Worksite worksite = GameObjectStore.findWorksite(attributes,
-				        person);
-
-				if (worksite == null) {
-					// object not found!
-					System.out.println("\t\t\tA suitable worksite was not found.");
-					return null;
-
-				}
-
-				System.out
-				        .println("\t\tA suitable worksite was successfully found.");
-				requiredObjects.put("worksite", worksite);
-
-			} else if (currentRequirement instanceof SkillCheckRequirement) {
-
-				// iterate through skills, make sure values are good
-				Map<String, Integer> requiredSkills = ((SkillCheckRequirement) currentRequirement)
-				        .getSkills();
-				Set<Entry<String, Integer>> setSkills = requiredSkills
-				        .entrySet();
-				Iterator<Entry<String, Integer>> iter = setSkills.iterator();
-				while (iter.hasNext()) {
-					Entry<String, Integer> skill = iter.next();
-					String skillName = skill.getKey();
-					Integer skillValue = skill.getValue();
-					Integer personSkillValue = person.getSkillValue(skillName);
-					if (personSkillValue.intValue() < skillValue.intValue()) {
-						// FAIL
-						System.out.println("\t\t\tRequired skill <" + skillName
-						        + "> too low.  Expected <"
-						        + skillValue.intValue() + ">, got <"
-						        + personSkillValue.intValue() + ">");
-						return null;
-					} else {
-						System.out.println("\t\t\tRequired skill <" + skillName
-						        + "> is sufficient.");
-					}
-
-				}
+			if (!currentRequirement.check(person, this.requiredObjects)) {
+				// requirement not met
+				return false;
 
 			}
 
 		}
 
-		return requiredObjects;
+		// all requirements met
+		return true;
 
 	}
 

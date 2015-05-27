@@ -18,6 +18,21 @@ public class GameObjectStore {
 		return getSubStore("all");
 	}
 
+
+	public static Person createPerson(String name, int age) {
+
+		return new Person(name, age);
+
+	}
+
+	public static GameObject createGameObject(String name) {
+		return new GameObject(name);
+	}
+
+	public static Worksite createWorksite(String name) {
+		return new Worksite(name);
+	}
+
 	public static Set<GameObject> getAllPeople() {
 		return getSubStore("person");
 	}
@@ -54,7 +69,8 @@ public class GameObjectStore {
 	}
 
 	public static GameObject findGameObject(String type,
-			Map<String, Attribute> attributes, Person owner) {
+
+	        Map<String, Attribute> attributes, Person owner) {
 
 		Set<GameObject> subSet = getSubStore(type);
 
@@ -86,7 +102,8 @@ public class GameObjectStore {
 
 				String attr1 = attributes.get(attributeName).getValue();
 				String attr2 = gameObject.getAttribute(attributeName)
-						.getValue();
+
+				        .getValue();
 
 				if (!attr1.equals(attr2)) {
 					// this attribute does not match.
@@ -110,7 +127,8 @@ public class GameObjectStore {
 	}
 
 	public static Worksite findWorksite(Map<String, Attribute> attributes,
-			Person owner) {
+
+	        Person owner) {
 
 		Set<GameObject> subSet = getSubStore("worksite");
 
@@ -142,7 +160,8 @@ public class GameObjectStore {
 
 				String attr1 = attributes.get(attributeName).getValue();
 				String attr2 = gameObject.getAttribute(attributeName)
-						.getValue();
+
+				        .getValue();
 
 				if (!attr1.equals(attr2)) {
 					// this attribute does not match.
@@ -153,10 +172,11 @@ public class GameObjectStore {
 			}
 
 			// check if we matched on all attributes
-			if (!failedAttrCheck && 
-					(gameObject.getOwner().equals(owner) || 
-					 gameObject.getOwner().equals(owner.getEmployer())) && 
-					 ((Worksite) gameObject).hasAvailableWorkerRoom()) {
+
+			if (!failedAttrCheck
+			        && (gameObject.getOwner().equals(owner) || gameObject
+			                .getOwner().equals(owner.getEmployer()))
+			        && ((Worksite) gameObject).hasAvailableWorkerRoom()) {
 				// winner winner chicken dinner
 				return (Worksite) gameObject;
 			}

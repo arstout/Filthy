@@ -1,8 +1,8 @@
 package com.fb.actions;
 
 import java.util.Iterator;
+import java.util.Map;
 
-import com.fb.Main;
 import com.fb.changes.Change;
 import com.fb.changes.ObjectAttributeChange;
 import com.fb.gameobject.GameObject;
@@ -24,9 +24,36 @@ public class WorkAction extends Action {
 		this.changes = action.changes;
 	}
 
+
+	public void prepare(Person person, Map<String, GameObject> requiredObjects) {
+
+		// get worksite
+		Worksite worksite = (Worksite) (requiredObjects.get("worksite"));
+
+		// add person to workers
+		worksite.addWorker(person);
+
+		// set turns on worksite only if it is not in use
+		if (!worksite.isInUse()) {
+			worksite.setTurnsUntilWorkComplete(getName());
+		}
+
+		// adjust person work output
+		person.setWorkOutputPerTurn(1);
+
+		// set worksite
+		setWorksite(worksite);
+
+		person.addActionToQueue(this);
+
+	}
+
 	public void complete(Person person) {
 
-		System.out.println("\t" + person.getName() + " has completed " + getName() + ".");
+
+		System.out.println("\t" + person.getName() + " has completed "
+		        + getName() + ".");
+
 		person.removeActionFromQueue();
 
 		// execute post-action changes
@@ -37,7 +64,9 @@ public class WorkAction extends Action {
 			Change change = changeIter.next();
 			if (change instanceof ObjectAttributeChange) {
 				String objectId = ((ObjectAttributeChange) change)
-						.getObjectId();
+
+				        .getObjectId();
+
 				GameObject objectToChange = null;
 				if (objectId.equals("worksite")) {
 					objectToChange = this.worksite;
@@ -46,13 +75,15 @@ public class WorkAction extends Action {
 				}
 
 				String attribute = ((ObjectAttributeChange) change)
-						.getAttribute();
+				        .getAttribute();
 				String value = ((ObjectAttributeChange) change).getValue();
 				System.out.println("\t\tChanging object "
-						+ objectToChange.getName() + ": Attribute " + attribute
-						+ " will be given a value of " + value + ".");
+
+				        + objectToChange.getName() + ": Attribute " + attribute
+				        + " will be given a value of " + value + ".");
+
 				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
-						attribute, value);
+				        attribute, value);
 			}
 		}
 
@@ -60,10 +91,14 @@ public class WorkAction extends Action {
 
 	public void turn(Person person) {
 		System.out.println("\t" + person.getName() + " continues to work on "
-				+ getName());
+
+		        + getName());
+
 		this.state = getWorksite().performWork(person.getWorkOutputPerTurn());
 		System.out.println("\t\tWork left to do on " + getWorksite().getName()
-				+ " is " + getWorksite().getTurnsUntilWorkComplete());
+
+		        + " is " + getWorksite().getTurnsUntilWorkComplete());
+
 	}
 
 	public Worksite getWorksite() {
@@ -76,8 +111,10 @@ public class WorkAction extends Action {
 
 	@Override
 	public void start(Person person) {
-		System.out.println("\t" + person.getName() + " is about to begin work on "
-				+ getName());
+
+		System.out.println("\t" + person.getName()
+		        + " is about to begin work on " + getName());
+
 		this.state = "ACTIVE";
 
 	}
