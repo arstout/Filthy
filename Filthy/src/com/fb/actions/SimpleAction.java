@@ -1,8 +1,11 @@
 package com.fb.actions;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import com.fb.actions.Action;
+import com.fb.changes.Change;
+import com.fb.changes.ObjectAttributeChange;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.Person;
 
@@ -22,6 +25,9 @@ public class SimpleAction extends Action {
 
 		this.duration = action.duration;
 		this.name = action.name;
+		this.preActionChanges = action.preActionChanges;
+		this.postActionChanges = action.postActionChanges;
+		this.perTurnActionChanges = action.perTurnActionChanges;
 
 		this.turnsUntilComplete = action.duration;
 	}
@@ -40,6 +46,33 @@ public class SimpleAction extends Action {
 		        + getName());
 
 		person.removeActionFromQueue();
+
+		// run post action changes
+		for(Change change : postActionChanges){
+			
+		
+			if (change instanceof ObjectAttributeChange) {
+				String objectId = ((ObjectAttributeChange) change)
+
+				.getObjectId();
+
+				GameObject objectToChange = null;
+				objectToChange = gameObjects.get(objectId);
+				
+
+				String attribute = ((ObjectAttributeChange) change)
+				        .getAttribute();
+				String value = ((ObjectAttributeChange) change).getValue();
+				System.out.println("\t\tChanging object "
+
+				+ objectToChange.getName() + ": Attribute " + attribute
+				        + " will be given a value of " + value + ".");
+
+				ObjectAttributeChange.modifyAttributeOnObject(
+				        objectToChange, attribute, value);
+			}
+		}
+		
 	}
 
 	@Override

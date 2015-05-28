@@ -32,15 +32,15 @@ public class Main {
 		ActionStore.createSimpleAction("derp", 1);
 
 		Action cultivateField = ActionStore.createWorkAction("cultivate_field");
-		cultivateField.addChange(new ObjectAttributeChange("worksite",
+		cultivateField.addPostActionChange(new ObjectAttributeChange("worksite",
 		        "status", "cultivated"));
 
 		Action plantField = ActionStore.createWorkAction("plant_field");
-		plantField.addChange(new ObjectAttributeChange("worksite", "status",
+		plantField.addPostActionChange(new ObjectAttributeChange("worksite", "status",
 		        "planted"));
 
 		Action waterField = ActionStore.createWorkAction("water_field");
-		waterField.addChange(new ObjectAttributeChange("worksite", "status",
+		waterField.addPostActionChange(new ObjectAttributeChange("worksite", "status",
 		        "watered"));
 
 		// build farmer behavior tree tree
@@ -75,10 +75,10 @@ public class Main {
 		req.addSimpleAttribute("status", "cultivated");
 		findFieldToPlant.addRequirement(req);
 
-		// InventoryCheckRequirement ireq =
-		// RequirementFactory.createInventoryCheckRequirement("seed");
-		// ireq.addSimpleAttribute("seed_type", "pepper");
-		// findFieldToPlant.addRequirement(ireq);
+		InventoryCheckRequirement ireq =
+		RequirementFactory.createInventoryCheckRequirement("seed");
+		//ireq.addSimpleAttribute("seed_type", "pepper");
+		findFieldToPlant.addRequirement(ireq);
 
 		sreq = RequirementFactory.createSkillCheckRequirement();
 		sreq.addSkill("PLANTING", 1);

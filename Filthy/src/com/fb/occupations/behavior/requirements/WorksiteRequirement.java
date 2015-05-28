@@ -36,7 +36,6 @@ public class WorksiteRequirement extends Requirement {
 
 	public boolean check(Person person, Map<String, GameObject> requiredObjects) {
 
-		System.out.println("checking worksite");
 		Worksite worksite = GameObjectStore.findWorksite(this.attributes,
 		        person);
 

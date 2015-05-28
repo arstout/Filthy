@@ -44,7 +44,6 @@ public class InventoryCheckRequirement extends Requirement {
 		boolean failedInvCheck = false;
 		for (GameObject gameObject : personInventory) {
 
-			System.out.println("checking object " + gameObject.getName());
 			// is it of the correct type?
 			if (!gameObject.getTypes().contains(type)) {
 				failedInvCheck = true;

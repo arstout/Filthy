@@ -21,7 +21,9 @@ public class WorkAction extends Action {
 	public WorkAction(WorkAction action) {
 		this.worksite = action.worksite;
 		this.name = action.name;
-		this.changes = action.changes;
+		this.preActionChanges = action.preActionChanges;
+		this.postActionChanges = action.postActionChanges;
+		this.perTurnActionChanges = action.perTurnActionChanges;
 	}
 
 	public void prepare(Person person, Map<String, GameObject> requiredObjects) {
@@ -55,36 +57,37 @@ public class WorkAction extends Action {
 		person.removeActionFromQueue();
 
 		// execute post-action changes
-		System.out.println("\t\tExecuting action complete steps");
+		System.out
+		        .println("\t\tExecuting action complete steps (only if workers = 0)");
 		this.worksite.removeWorker(person);
-		Iterator<Change> changeIter = changes.iterator();
-		while (changeIter.hasNext()) {
-			Change change = changeIter.next();
-			if (change instanceof ObjectAttributeChange) {
-				String objectId = ((ObjectAttributeChange) change)
+		if (this.worksite.getWorkerCount() == 0) {
+			// run post action changes
+			for(Change change : postActionChanges){
+				if (change instanceof ObjectAttributeChange) {
+					String objectId = ((ObjectAttributeChange) change)
 
-				.getObjectId();
+					.getObjectId();
 
-				GameObject objectToChange = null;
-				if (objectId.equals("worksite")) {
-					objectToChange = this.worksite;
-				} else {
-					objectToChange = gameObjects.get(objectId);
+					GameObject objectToChange = null;
+					if (objectId.equals("worksite")) {
+						objectToChange = this.worksite;
+					} else {
+						objectToChange = gameObjects.get(objectId);
+					}
+
+					String attribute = ((ObjectAttributeChange) change)
+					        .getAttribute();
+					String value = ((ObjectAttributeChange) change).getValue();
+					System.out.println("\t\tChanging object "
+
+					+ objectToChange.getName() + ": Attribute " + attribute
+					        + " will be given a value of " + value + ".");
+
+					ObjectAttributeChange.modifyAttributeOnObject(
+					        objectToChange, attribute, value);
 				}
-
-				String attribute = ((ObjectAttributeChange) change)
-				        .getAttribute();
-				String value = ((ObjectAttributeChange) change).getValue();
-				System.out.println("\t\tChanging object "
-
-				+ objectToChange.getName() + ": Attribute " + attribute
-				        + " will be given a value of " + value + ".");
-
-				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
-				        attribute, value);
 			}
 		}
-
 	}
 
 	public void turn(Person person) {

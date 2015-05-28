@@ -2,10 +2,12 @@ package com.fb.actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.fb.changes.Change;
+import com.fb.changes.ObjectAttributeChange;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.Person;
 
@@ -14,7 +16,9 @@ public abstract class Action {
 	protected String name;
 	protected Map<String, GameObject> gameObjects = new HashMap<String, GameObject>();
 	protected String state = "QUEUED";
-	protected List<Change> changes = new ArrayList<Change>();
+	protected List<Change> preActionChanges = new ArrayList<Change>();
+	protected List<Change> postActionChanges = new ArrayList<Change>();
+	protected List<Change> perTurnActionChanges = new ArrayList<Change>();
 
 	public abstract void prepare(Person person,
 	        Map<String, GameObject> requiredObjects);
@@ -45,16 +49,28 @@ public abstract class Action {
 		this.state = state;
 	}
 
-	public List<Change> getChanges() {
-		return changes;
+	public List<Change> getPreActionChanges() {
+		return preActionChanges;
 	}
 
-	public void setChanges(List<Change> changes) {
-		this.changes = changes;
+	public List<Change> getPostActionChanges() {
+		return postActionChanges;
 	}
 
-	public void addChange(Change change) {
-		this.changes.add(change);
+	public List<Change> getPerTurnActionChanges() {
+		return perTurnActionChanges;
 	}
 
+	public void addPreActionChange(Change change) {
+		this.preActionChanges.add(change);
+	}
+
+	public void addPostActionChange(Change change) {
+		this.postActionChanges.add(change);
+	}
+	
+	public void addPerTurnActionChange(Change change) {
+		this.perTurnActionChanges.add(change);
+	}
+	
 }
