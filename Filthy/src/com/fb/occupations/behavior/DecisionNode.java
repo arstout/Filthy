@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-import com.fb.actions.Action;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.Person;
 import com.fb.occupations.behavior.requirements.Requirement;

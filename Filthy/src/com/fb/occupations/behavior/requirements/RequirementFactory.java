@@ -11,8 +11,8 @@ public class RequirementFactory {
 	}
 
 	public static InventoryCheckRequirement createInventoryCheckRequirement(
-	        String type) {
-		return new InventoryCheckRequirement(type);
+	        String type, String objectId) {
+		return new InventoryCheckRequirement(type, objectId);
 	}
 
 }

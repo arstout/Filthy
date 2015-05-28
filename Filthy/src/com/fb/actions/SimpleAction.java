@@ -1,6 +1,6 @@
 package com.fb.actions;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.fb.actions.Action;
@@ -40,17 +40,10 @@ public class SimpleAction extends Action {
 	}
 
 	@Override
-	public void complete(Person person) {
+	public void executeChanges(List<Change> changes) {
 
-		System.out.println("\t" + person.getName() + " has completed "
-		        + getName());
+		for (Change change : changes) {
 
-		person.removeActionFromQueue();
-
-		// run post action changes
-		for(Change change : postActionChanges){
-			
-		
 			if (change instanceof ObjectAttributeChange) {
 				String objectId = ((ObjectAttributeChange) change)
 
@@ -58,7 +51,6 @@ public class SimpleAction extends Action {
 
 				GameObject objectToChange = null;
 				objectToChange = gameObjects.get(objectId);
-				
 
 				String attribute = ((ObjectAttributeChange) change)
 				        .getAttribute();
@@ -68,11 +60,22 @@ public class SimpleAction extends Action {
 				+ objectToChange.getName() + ": Attribute " + attribute
 				        + " will be given a value of " + value + ".");
 
-				ObjectAttributeChange.modifyAttributeOnObject(
-				        objectToChange, attribute, value);
+				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
+				        attribute, value);
 			}
 		}
-		
+	}
+
+	@Override
+	public void complete(Person person) {
+
+		System.out.println("\t" + person.getName() + " has completed "
+		        + getName());
+
+		person.removeActionFromQueue();
+
+		this.executeChanges(this.postActionChanges);
+
 	}
 
 	@Override
@@ -81,6 +84,7 @@ public class SimpleAction extends Action {
 		System.out.println("\t" + person.getName()
 		        + " is about to begin work on " + getName());
 
+		this.executeChanges(this.preActionChanges);
 		this.state = "ACTIVE";
 	}
 
@@ -89,9 +93,16 @@ public class SimpleAction extends Action {
 		System.out.println("\t" + person.getName() + " continues to perform "
 
 		+ getName());
-		this.turnsUntilComplete--;
-		System.out.println("\t\t" + this.name + " has " + turnsUntilComplete
-		        + " turns left until completion.");
+		if (this.turnsUntilComplete > 0) {
+
+			this.turnsUntilComplete--;
+			System.out.println("\t\t" + this.name + " has "
+			        + turnsUntilComplete + " turns left until completion.");
+
+			this.executeChanges(this.perTurnActionChanges);
+
+		}
+
 		if (this.turnsUntilComplete <= 0) {
 			this.state = "COMPLETED";
 		}

@@ -2,12 +2,10 @@ package com.fb.actions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import com.fb.changes.Change;
-import com.fb.changes.ObjectAttributeChange;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.Person;
 
@@ -28,6 +26,8 @@ public abstract class Action {
 	public abstract void complete(Person person);
 
 	public abstract void turn(Person person);
+
+	public abstract void executeChanges(List<Change> changes);
 
 	public void addGameObjects(Map<String, GameObject> gameObjects) {
 		this.gameObjects = gameObjects;
@@ -68,9 +68,9 @@ public abstract class Action {
 	public void addPostActionChange(Change change) {
 		this.postActionChanges.add(change);
 	}
-	
+
 	public void addPerTurnActionChange(Change change) {
 		this.perTurnActionChanges.add(change);
 	}
-	
+
 }

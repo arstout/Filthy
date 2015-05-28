@@ -12,7 +12,7 @@ public class Worksite extends GameObject {
 	private int turnsUntilWorkComplete = 0;
 	private List<Person> workers = new ArrayList<Person>();
 	private int maxWorkers;
-	private boolean inUse = false;;
+	private boolean inUse = false;
 
 	protected Worksite(String name) {
 		super(name);

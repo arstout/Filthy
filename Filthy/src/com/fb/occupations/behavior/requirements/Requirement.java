@@ -2,7 +2,6 @@ package com.fb.occupations.behavior.requirements;
 
 import java.util.Map;
 
-import com.fb.gameobject.Attribute;
 import com.fb.gameobject.GameObject;
 import com.fb.gameobject.Person;
 

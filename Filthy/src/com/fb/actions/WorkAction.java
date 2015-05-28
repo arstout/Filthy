@@ -1,6 +1,6 @@
 package com.fb.actions;
 
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import com.fb.changes.Change;
@@ -24,6 +24,37 @@ public class WorkAction extends Action {
 		this.preActionChanges = action.preActionChanges;
 		this.postActionChanges = action.postActionChanges;
 		this.perTurnActionChanges = action.perTurnActionChanges;
+	}
+
+	@Override
+	public void executeChanges(List<Change> changes) {
+
+		for (Change change : changes) {
+			if (change instanceof ObjectAttributeChange) {
+				String objectId = ((ObjectAttributeChange) change)
+
+				.getObjectId();
+
+				GameObject objectToChange = null;
+				if (objectId.equals("worksite")) {
+					objectToChange = this.worksite;
+				} else {
+					objectToChange = gameObjects.get(objectId);
+				}
+
+				String attribute = ((ObjectAttributeChange) change)
+				        .getAttribute();
+				String value = ((ObjectAttributeChange) change).getValue();
+				System.out.println("\t\tChanging object "
+
+				+ objectToChange.getName() + ": Attribute " + attribute
+				        + " will be given a value of " + value + ".");
+
+				ObjectAttributeChange.modifyAttributeOnObject(objectToChange,
+				        attribute, value);
+			}
+		}
+
 	}
 
 	public void prepare(Person person, Map<String, GameObject> requiredObjects) {
@@ -62,31 +93,7 @@ public class WorkAction extends Action {
 		this.worksite.removeWorker(person);
 		if (this.worksite.getWorkerCount() == 0) {
 			// run post action changes
-			for(Change change : postActionChanges){
-				if (change instanceof ObjectAttributeChange) {
-					String objectId = ((ObjectAttributeChange) change)
-
-					.getObjectId();
-
-					GameObject objectToChange = null;
-					if (objectId.equals("worksite")) {
-						objectToChange = this.worksite;
-					} else {
-						objectToChange = gameObjects.get(objectId);
-					}
-
-					String attribute = ((ObjectAttributeChange) change)
-					        .getAttribute();
-					String value = ((ObjectAttributeChange) change).getValue();
-					System.out.println("\t\tChanging object "
-
-					+ objectToChange.getName() + ": Attribute " + attribute
-					        + " will be given a value of " + value + ".");
-
-					ObjectAttributeChange.modifyAttributeOnObject(
-					        objectToChange, attribute, value);
-				}
-			}
+			this.executeChanges(this.postActionChanges);
 		}
 	}
 
@@ -95,10 +102,21 @@ public class WorkAction extends Action {
 
 		+ getName());
 
-		this.state = getWorksite().performWork(person.getWorkOutputPerTurn());
-		System.out.println("\t\tWork left to do on " + getWorksite().getName()
+		if (getWorksite().getTurnsUntilWorkComplete() > 0) {
 
-		+ " is " + getWorksite().getTurnsUntilWorkComplete());
+			this.state = getWorksite().performWork(
+			        person.getWorkOutputPerTurn());
+
+			this.executeChanges(this.perTurnActionChanges);
+
+			System.out.println("\t\tWork left to do on "
+			        + getWorksite().getName()
+
+			        + " is " + getWorksite().getTurnsUntilWorkComplete());
+
+		} else {
+			this.state = "COMPLETED";
+		}
 
 	}
 
@@ -115,6 +133,10 @@ public class WorkAction extends Action {
 
 		System.out.println("\t" + person.getName()
 		        + " is about to begin work on " + getName());
+
+		// pre action steps
+
+		this.executeChanges(this.preActionChanges);
 
 		this.state = "ACTIVE";
 

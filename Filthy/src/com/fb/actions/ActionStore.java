@@ -24,8 +24,13 @@ public class ActionStore {
 
 	public static Action getAction(String name) {
 		Action action = actionStore.get(name);
-		action.setState("QUEUED");
-		return action;
+		if (action instanceof WorkAction) {
+			return new WorkAction((WorkAction) action);
+		} else if (action instanceof SimpleAction) {
+			return new SimpleAction((SimpleAction) action);
+		}
+
+		return null;
 	}
 
 }
