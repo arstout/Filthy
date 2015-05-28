@@ -15,20 +15,15 @@ public class SimpleAction extends Action {
 	private int turnsUntilComplete;
 
 	protected SimpleAction(String name, int duration) {
-
-		this.name = name;
+		super(name);
 		this.duration = duration;
 		this.turnsUntilComplete = duration;
 	}
 
 	protected SimpleAction(SimpleAction action) {
 
+		super(action);
 		this.duration = action.duration;
-		this.name = action.name;
-		this.preActionChanges = action.preActionChanges;
-		this.postActionChanges = action.postActionChanges;
-		this.perTurnActionChanges = action.perTurnActionChanges;
-
 		this.turnsUntilComplete = action.duration;
 	}
 

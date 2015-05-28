@@ -18,6 +18,21 @@ public abstract class Action {
 	protected List<Change> postActionChanges = new ArrayList<Change>();
 	protected List<Change> perTurnActionChanges = new ArrayList<Change>();
 
+	
+	protected Action(String name){
+		this.name = name;
+	}
+	
+	protected Action(Action action){
+		this.name = action.name;
+		this.gameObjects = action.gameObjects;
+		this.state = "QUEUED";
+		this.preActionChanges = action.preActionChanges;
+		this.postActionChanges = action.postActionChanges;
+		this.perTurnActionChanges = action.perTurnActionChanges;
+		
+	}
+	
 	public abstract void prepare(Person person,
 	        Map<String, GameObject> requiredObjects);
 

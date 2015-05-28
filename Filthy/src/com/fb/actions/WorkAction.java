@@ -14,16 +14,12 @@ public class WorkAction extends Action {
 	private Worksite worksite;
 
 	public WorkAction(String name) {
-		super();
-		this.name = name;
+		super(name);
 	}
 
 	public WorkAction(WorkAction action) {
+		super(action);
 		this.worksite = action.worksite;
-		this.name = action.name;
-		this.preActionChanges = action.preActionChanges;
-		this.postActionChanges = action.postActionChanges;
-		this.perTurnActionChanges = action.perTurnActionChanges;
 	}
 
 	@Override
